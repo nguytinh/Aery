@@ -14,10 +14,14 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id            Int     @id @default(autoincrement())
+  email         String  @unique
+  name          String?
+  userName      String? @unique
+  posts         Post[]
+  followers     Int @default(0)
+  following     Int @default(0)
+  bio           String?
 }
 
 model Post {
