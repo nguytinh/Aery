@@ -11,12 +11,13 @@
     "seed": "cross-env NODE_OPTIONS='--loader ts-node/esm' ts-node src/lib/seed.ts"
   },
   "dependencies": {
-    "@chakra-ui/next-js": "^2.2.0",
+    "@chakra-ui/icons": "^2.2.4",
+    "@chakra-ui/next-js": "^2.4.2",
     "@chakra-ui/react": "^2.10.3",
     "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/styled": "^11.13.0",
     "@prisma/client": "^5.22.0",
-    "framer-motion": "^11.0.8",
+    "framer-motion": "^11.11.11",
     "next": "^15.0.2",
     "next-themes": "^0.3.0",
     "react": "^18",

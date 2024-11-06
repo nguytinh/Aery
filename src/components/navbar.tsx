@@ -1,62 +1,93 @@
 // Navbar.tsx
 import { Box, Flex, Image, Link, HStack } from '@chakra-ui/react';
-import NextLink from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 
 const Navbar: React.FC = () => {
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const handleNavigation = (path: string) => {
+      if (pathname === path) {
+          window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+          });
+      } else {
+          router.push(path);
+          window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+          });
+      }
+  };
+
     return (
       <Box as="nav" bg="white" py={4} shadow="md" position="fixed" width="100%" zIndex="100">
         <Flex maxW="1200px" mx="auto" align="center" px={4} justify="center">
-          {/* Links */}
           <HStack spacing={8}>
-            <NextLink href="/home" passHref>
-              <Link 
-                color="gray.700" 
-                fontWeight="semibold"
-                _hover={{ 
+            <Link 
+              onClick={() => handleNavigation('/home')}
+              color="gray.700" 
+              fontWeight="semibold"
+              cursor="pointer"
+              _hover={{ 
                 color: "blue.300",
                 textDecoration: "none" 
-              }}>Home</Link>
-            </NextLink>
-            <NextLink href="/friends" passHref>
-              <Link 
-                color="gray.700" 
-                fontWeight="semibold"
-                _hover={{ 
+              }}
+            >
+              Home
+            </Link>
+
+            <Link 
+              onClick={() => handleNavigation('/friends')}
+              color="gray.700" 
+              fontWeight="semibold"
+              cursor="pointer"
+              _hover={{ 
                 color: "blue.300",
                 textDecoration: "none" 
-              }}>Friends</Link>
-            </NextLink>
+              }}
+            >
+              Friends
+            </Link>
   
-            {/* Logo */}
-            <NextLink href="/" passHref>
-              <Link>
-                <Image 
-                  src="/assets/AeryLogo.jpg" 
-                  alt="Logo" 
-                  boxSize="65px"
-                  mx={8} // Add more spacing around the logo
-                />
-              </Link>
-            </NextLink>
+            <Link
+              onClick={() => handleNavigation('/')}
+              cursor="pointer"
+            >
+              <Image 
+                src="/assets/AeryLogo.jpg" 
+                alt="Logo" 
+                boxSize="65px"
+                mx={8}
+              />
+            </Link>
   
-            <NextLink href="/profile" passHref>
-              <Link 
-                color="gray.700" 
-                fontWeight="semibold"
-                _hover={{ 
+            <Link 
+              onClick={() => handleNavigation('/profile')}
+              color="gray.700" 
+              fontWeight="semibold"
+              cursor="pointer"
+              _hover={{ 
                 color: "blue.300",
                 textDecoration: "none" 
-              }}>Profile</Link>
-            </NextLink>
-            <NextLink href="/login" passHref>
-              <Link 
-                color="gray.700" 
-                fontWeight="semibold"
-                _hover={{ 
+              }}
+            >
+              Profile
+            </Link>
+
+            <Link 
+              onClick={() => handleNavigation('/login')}
+              color="gray.700" 
+              fontWeight="semibold"
+              cursor="pointer"
+              _hover={{ 
                 color: "blue.300",
                 textDecoration: "none" 
-              }}>Logout</Link>
-            </NextLink>
+              }}
+            >
+              Logout
+            </Link>
           </HStack>
         </Flex>
       </Box>
