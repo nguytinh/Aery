@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
                 textDecoration: "none" 
               }}>Home</Link>
             </NextLink>
-            <NextLink href="/services" passHref>
+            <NextLink href="/friends" passHref>
               <Link 
                 color="gray.700" 
                 fontWeight="semibold"
@@ -39,7 +39,7 @@ const Navbar: React.FC = () => {
               </Link>
             </NextLink>
   
-            <NextLink href="/contact" passHref>
+            <NextLink href="/profile" passHref>
               <Link 
                 color="gray.700" 
                 fontWeight="semibold"
@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
                 textDecoration: "none" 
               }}>Profile</Link>
             </NextLink>
-            <NextLink href="/portfolio" passHref>
+            <NextLink href="/login" passHref>
               <Link 
                 color="gray.700" 
                 fontWeight="semibold"
