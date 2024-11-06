@@ -1,15 +1,27 @@
-'use client';
+"use client";
 
-import { Box, Input, VStack, IconButton } from "@chakra-ui/react";
+import { Box, Input, VStack, Heading, IconButton } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useState } from "react";
-import Navbar from '../../components/navbar'; // Ensure correct path
+import Navbar from "../../components/navbar"; // Ensure correct path
 
 // Sample items - will eventually come from the database
 const items = [
-  "joaquin", "jesus", "tinh", "ethan", "ryan", "austin", 
-  "Mr.Beast", "Mr. Fox", "jesus1", "tinh1", "ethan1", 
-  "ryan1", "austin1", "Mr.Beast1", "Mr. Fox1"
+  "joaquin",
+  "jesus",
+  "tinh",
+  "ethan",
+  "ryan",
+  "austin",
+  "Mr.Beast",
+  "Mr. Fox",
+  "jesus1",
+  "tinh1",
+  "ethan1",
+  "ryan1",
+  "austin1",
+  "Mr.Beast1",
+  "Mr. Fox1",
 ];
 
 const Friendpage = () => {
@@ -24,13 +36,19 @@ const Friendpage = () => {
   return (
     <>
       <Navbar /> {/* Add Navbar component at the top */}
-      
       <Box
         display="flex"
+        flexDirection="column"
         alignItems="center"
         justifyContent="center"
         minH="50vh" // Adjust height of the main search box section
+        p={4}
       >
+        {/* Added Heading/Text above the search bar */}
+        <Heading as="h1" size="lg" mb={4}>
+          Discover Your Friends!
+        </Heading>
+
         <Box pos="relative" w="full" maxW="md">
           <Box pos="relative" w="full">
             <Input
@@ -50,8 +68,8 @@ const Friendpage = () => {
               transform="translateY(-50%)"
               size="sm"
             />
-          </Box> 
-        
+          </Box>
+
           {isDropdownOpen && filteredItems.length > 0 && (
             <VStack
               pos="absolute"
