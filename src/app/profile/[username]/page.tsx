@@ -9,6 +9,8 @@ import {
   Center,
   VStack,
   HStack,
+  Button,
+  Flex,
 } from "@chakra-ui/react";
 
 export default async function Page({
@@ -22,7 +24,6 @@ export default async function Page({
 
   const prisma = new PrismaClient();
   const username = (await params).username;
-  console.log(username);
 
   const user: UserWithPosts | null = await prisma.user.findUnique({
     where: {
@@ -30,10 +31,8 @@ export default async function Page({
     },
     include: { posts: true },
   });
-
-  console.log("user", user);
   return (
-    <Box maxW="2xl" mx="auto" p={6} bg="white" shadow="md" rounded="lg">
+    <Box mx="auto" p={6} bg="white" shadow="md" rounded="lg">
       {!user && (
         <Center>
           <Text>Sorry, could not find this user!</Text>
@@ -49,9 +48,23 @@ export default async function Page({
               src="https://xsgames.co/randomusers/avatar.php?g=pixel"
               alt="Profile"
             />
-            <Heading as="h1" size="xl">
-              {user.userName}
-            </Heading>
+            <Flex align="center">
+              <Heading as="h1" size="xl" mr={4}>
+                {user.userName}
+              </Heading>
+              <Button
+                variant="solid"
+                className = 'bg-sky-300 hover:bg-sky-500'
+                px={2}
+                py={0}
+                borderRadius="md"
+                boxShadow="sm"
+                fontWeight="semibold"
+              >
+                Follow
+              </Button>
+            </Flex>
+
             <HStack>
               <Box textAlign="center">
                 <Text fontSize="xl" fontWeight="bold">
@@ -73,10 +86,9 @@ export default async function Page({
               </Box>
             </HStack>
             <Box textAlign="center">
-              <Heading as="h2" size="lg">
-                {user.name}
-              </Heading>
-              <Text color="gray.700">{user.bio}</Text>
+              <Box className="border-2 px-1" borderRadius="md" color="gray.700">
+                {user.bio}
+              </Box>
             </Box>
           </VStack>
 
@@ -84,10 +96,13 @@ export default async function Page({
             <Heading as="h2" size="lg" mb={6} textAlign="center">
               Posts
             </Heading>
-            <Grid templateColumns="repeat(auto-fit, minmax(200px, 1fr))" gap={4}>
+            <Grid
+              templateColumns="repeat(auto-fit, minmax(200px, 1fr))"
+              gap={4}
+            >
               {user.posts.map((post) => (
                 <Box
-                  key={post.id} // Assuming `post` has a unique `id`
+                  key={post.id}
                   w="100%"
                   h="48"
                   bg="gray.100"
