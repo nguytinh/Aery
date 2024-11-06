@@ -3,6 +3,9 @@ const nextConfig = {
   images: {
     domains: ['xsgames.co'], // Add allowed domains here
   },
+  experimental: {
+    optimizePackageImports: ["@chakra-ui/react"],
+  },
 };
 
 export default nextConfig;
