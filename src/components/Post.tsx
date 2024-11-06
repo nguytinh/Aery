@@ -18,19 +18,19 @@ const Post: React.FC<PostProps> = ({ title, content, image, author, likes }) => 
     <Box 
       borderWidth="1px" 
       borderRadius="lg" 
-      p={4} 
+      p={6}
       mb={4} 
       width="100%" 
-      maxW="600px"
+      maxW="800px"
       bg="white"
-      shadow="sm"
+      shadow="md"
+      mx="auto"
     >
       <Flex alignItems="center" mb={4}>
         <Avatar size="sm" name={author.name || undefined} mr={2} />
         <Text fontWeight="bold">{author.userName || 'Anonymous'}</Text>
       </Flex>
       
-      {/* Image placed before title */}
       {image && (
         <Box mb={4} borderRadius="md" overflow="hidden">
           <Image 
