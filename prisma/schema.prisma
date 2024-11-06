@@ -50,6 +50,7 @@ model User {
 // Serves as our "user"
 model Account {
     userId            String  @unique
+    password          String
     type              String
     provider          String
     providerAccountId String
