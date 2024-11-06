@@ -1,5 +1,15 @@
-import Image from "next/image";
+// import Image from "next/image";
 import { PrismaClient, Prisma } from "@prisma/client";
+import {
+  Box,
+  Heading,
+  Text,
+  Grid,
+  Image as ChakraImage,
+  Center,
+  VStack,
+  HStack,
+} from "@chakra-ui/react";
 
 export default async function Page({
   params,
@@ -20,77 +30,79 @@ export default async function Page({
     },
     include: { posts: true },
   });
+
+  console.log("user", user);
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    <Box maxW="2xl" mx="auto" p={6} bg="white" shadow="md" rounded="lg">
       {!user && (
-        <div className="flex justify-center items-center h-64 text-gray-700">
-          Sorry, could not find this user!
-        </div>
+        <Center>
+          <Text>Sorry, could not find this user!</Text>
+        </Center>
       )}
       {user && (
         <>
-          <div className="flex flex-col items-center space-y-6">
-            <Image
-              className="w-32 h-32 rounded-full object-cover"
+          <VStack align="center">
+            <ChakraImage
+              boxSize="128px"
+              borderRadius="full"
+              objectFit="cover"
               src="https://xsgames.co/randomusers/avatar.php?g=pixel"
               alt="Profile"
-              width={128}
-              height={128}
             />
-            <div className="w-full flex items-center justify-center space-x-4">
-              <h1 className="text-3xl font-semibold">{user.userName}</h1>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-                Follow
-              </button>
-            </div>
-            <div className="flex space-x-12">
-              <div className="text-center">
-                <span className="block text-xl font-bold">
+            <Heading as="h1" size="xl">
+              {user.userName}
+            </Heading>
+            <HStack>
+              <Box textAlign="center">
+                <Text fontSize="xl" fontWeight="bold">
                   {user.posts.length}
-                </span>
-                <span className="text-gray-600">Posts</span>
-              </div>
-              <div className="text-center">
-                <span className="block text-xl font-bold">
+                </Text>
+                <Text color="gray.600">Posts</Text>
+              </Box>
+              <Box textAlign="center">
+                <Text fontSize="xl" fontWeight="bold">
                   {user.followers}
-                </span>
-                <span className="text-gray-600">Followers</span>
-              </div>
-              <div className="text-center">
-                <span className="block text-xl font-bold">
+                </Text>
+                <Text color="gray.600">Followers</Text>
+              </Box>
+              <Box textAlign="center">
+                <Text fontSize="xl" fontWeight="bold">
                   {user.following}
-                </span>
-                <span className="text-gray-600">Following</span>
-              </div>
-            </div>
-            <div className="text-center">
-              <h2 className="text-2xl font-medium">{user.name}</h2>
-              <p className="border px-4 py-1 text-gray-700 rounded-md">
-                {user.bio}
-              </p>
-            </div>
-          </div>
+                </Text>
+                <Text color="gray.600">Following</Text>
+              </Box>
+            </HStack>
+            <Box textAlign="center">
+              <Heading as="h2" size="lg">
+                {user.name}
+              </Heading>
+              <Text color="gray.700">{user.bio}</Text>
+            </Box>
+          </VStack>
 
-          <div className="mt-10">
-            <h2 className="text-2xl font-semibold mb-6 text-center">Posts</h2>
-            {user.posts.length === 0 && (
-              <div className="flex justify-center text-gray-500">
-                None so far!
-              </div>
-            )}
-            <div className="grid grid-cols-3 gap-6">
+          <Box mt={10}>
+            <Heading as="h2" size="lg" mb={6} textAlign="center">
+              Posts
+            </Heading>
+            <Grid templateColumns="repeat(auto-fit, minmax(200px, 1fr))" gap={4}>
               {user.posts.map((post) => (
-                <div
-                  key={post.id}
-                  className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-700"
+                <Box
+                  key={post.id} // Assuming `post` has a unique `id`
+                  w="100%"
+                  h="48"
+                  bg="gray.100"
+                  rounded="lg"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
                 >
-                  {post.title}
-                </div>
+                  <Text>{post.title}</Text>
+                </Box>
               ))}
-            </div>
-          </div>
+            </Grid>
+          </Box>
         </>
       )}
-    </div>
+    </Box>
   );
 }
