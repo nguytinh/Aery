@@ -6,6 +6,8 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["@chakra-ui/react"],
   },
+    serverExternalPackages: ["bcrypt"],
 };
 
-export default nextConfig;
+
+export default nextConfig
