@@ -19,12 +19,13 @@ const signUpSchema = z.object({
         .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
         .regex(/[a-z]/, "Password must contain at least one lowercase letter")
         .regex(/[0-9]/, "Password must contain at least one number"),
+    apiError: z.string().optional(),
 });
 
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
-export default function Signup() {
-    const { register, handleSubmit, formState: { errors } } = useForm<SignUpFormData>({
+export default function Login() {
+    const { register, handleSubmit, setError, formState: { errors } } = useForm<SignUpFormData>({
         resolver: zodResolver(signUpSchema),
     });
 
@@ -37,8 +38,9 @@ export default function Signup() {
             body: JSON.stringify(data),
         });
         if (!response.ok) {
-            console.error("Failed to sign in:", response);
-            return;
+            response.json().then((data) => {
+                setError('apiError', { type: 'manual', message: data.error });
+            });
         } else {
             // Automatically sign in the user after successful sign-up
             await signIn('credentials', {
@@ -75,6 +77,7 @@ export default function Signup() {
                         />
                         {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
                     </div>
+                    {errors.apiError && <p className="text-red-500 text-xs mt-1">{errors.apiError.message}</p>}
                     <button
                         type="submit"
                         className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
