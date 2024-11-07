@@ -39,7 +39,7 @@ const Navbar: React.FC = () => {
             </Link>
 
             <Link 
-              onClick={() => handleNavigation('/friends')}
+              onClick={() => handleNavigation('/searchfriend')}
               color="gray.700" 
               fontWeight="semibold"
               cursor="pointer"
