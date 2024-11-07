@@ -28,8 +28,8 @@ export default function Signup() {
         resolver: zodResolver(signUpSchema),
     });
 
-    const handleSignUp = async (data: SignUpFormData) => {
-        const response = await fetch("/api/user/signup", {
+    const handleSignIn = async (data: SignUpFormData) => {
+        const response = await fetch("/api/user/signin", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -37,27 +37,26 @@ export default function Signup() {
             body: JSON.stringify(data),
         });
         if (!response.ok) {
-            console.error("Failed to sign up:", response);
+            console.error("Failed to sign in:", response);
             return;
         } else {
             // Automatically sign in the user after successful sign-up
             await signIn('credentials', {
-                redirect: false, // Prevents automatic redirect
+                redirect: true, // Prevents automatic redirect
+                redirectTo: '/',
                 email: data.email,
                 password: data.password,
             });
             // Redirect or show success message here
 
         }
-        const user = await response.json();
-        console.log("Signed up user:", user);
     };
 
     return (
         <div className="flex flex-col items-center min-h-screen justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
                 <h1 className="text-2xl font-semibold text-center mb-6">Sign up for an account below:</h1>
-                <form onSubmit={handleSubmit(handleSignUp)} className="space-y-4">
+                <form onSubmit={handleSubmit(handleSignIn)} className="space-y-4">
                     <div className="flex flex-col">
                         <label className="mb-1 text-sm font-medium text-gray-700">Email:</label>
                         <input
@@ -80,7 +79,7 @@ export default function Signup() {
                         type="submit"
                         className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
                     >
-                        Sign Up
+                        Sign In
                     </button>
                 </form>
             </div>

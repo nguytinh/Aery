@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
 
-export default nextConfig;
+const nextConfig = {
+    experimental: {
+      optimizePackageImports: ["@chakra-ui/react"],
+    },
+    serverExternalPackages: ["bcrypt"],
+  }
+
+export default nextConfig
