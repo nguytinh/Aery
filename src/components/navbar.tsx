@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
             </Link>
   
             <Link 
-              onClick={() => handleNavigation('/profile')}
+              onClick={() => handleNavigation('/profile/tinhnguy')}
               color="gray.700" 
               fontWeight="semibold"
               cursor="pointer"
