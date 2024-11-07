@@ -57,7 +57,7 @@ export default function Login() {
     return (
         <div className="flex flex-col items-center min-h-screen justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
-                <h1 className="text-2xl font-semibold text-center mb-6">Sign up for an account below:</h1>
+                <h1 className="text-2xl font-semibold text-center mb-6">Sign in:</h1>
                 <form onSubmit={handleSubmit(handleSignIn)} className="space-y-4">
                     <div className="flex flex-col">
                         <label className="mb-1 text-sm font-medium text-gray-700">Email:</label>
