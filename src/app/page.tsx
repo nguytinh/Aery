@@ -6,7 +6,7 @@ import NextLink from "next/link";
 
 export default function Page() {
     const pages = [
-        { name: "Home", path: "/home", description: "Return to the main page" },
+        { name: "Main Feed", path: "/home", description: "Return to the main page" },
         { name: "About", path: "/about", description: "Learn more about us" },
         { name: "Profile", path: "/profile", description: "View your profile" },
         { name: "Login", path: "/login", description: "Sign in to your account" },
