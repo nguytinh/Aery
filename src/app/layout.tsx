@@ -10,7 +10,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
             <body className='flex flex-col gap-2'>
                 <UserAvatar />
                 <Provider>
-                    <Navbar />
                     {children}
                 </Provider>
             </body>
