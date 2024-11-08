@@ -10,7 +10,6 @@ export async function GET() {
         id: true,
         title: true,
         content: true,
-        likes: true,
         published: true,
         image: true,     // Added image field
         author: {

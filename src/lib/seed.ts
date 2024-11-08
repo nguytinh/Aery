@@ -13,10 +13,9 @@ async function main() {
     const user = await prisma.user.create({
       data: {
         email: 'tinhphong04@gmail.com',
+        password: "Randompass12*",
         name: 'Tinh Nguyen',
         userName: 'tinhnguy',
-        followers: 100,
-        following: 100,
         bio: 'I love coding!'
       }
     });
@@ -29,7 +28,6 @@ const posts = await Promise.all([
       title: "Hello everyone! 👋",
       content: "This is my first post! I just showered",
       published: true,
-      likes: 5,
       authorId: user.id,
       image: "https://picsum.photos/600/400?random=1"  // Direct image URL
     }
@@ -39,7 +37,6 @@ const posts = await Promise.all([
       title: "Hey guys I just went GYM!!! 🚀",
       content: "I hate TRUMP!!!!",
       published: true,
-      likes: 10,
       authorId: user.id,
       image: "https://picsum.photos/600/400?random=2"
     }
@@ -49,7 +46,6 @@ const posts = await Promise.all([
       title: "I just went on a run ⚡️",
       content: "Making progress every day!",
       published: true,
-      likes: 15,
       authorId: user.id,
       image: "https://picsum.photos/600/400?random=3"
     }
