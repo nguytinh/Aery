@@ -1,105 +1,144 @@
 "use client";
 
-import { ClientUser } from "@/app/interfaces/primsa"
+import { ClientUser } from "@/app/interfaces/primsa";
 import Navbar from "../../../components/navbar";
 import {
     Box,
     Heading,
     Text,
-    Grid,
+    SimpleGrid,
     Image as ChakraImage,
     Center,
     VStack,
     HStack,
-    Flex,
+    Container,
+    Card,
+    CardBody,
+    Stat,
+    StatNumber,
+    StatLabel,
+    Divider,
+    Badge,
 } from "@chakra-ui/react";
 
 export default function UserProfile({ user }: { user: ClientUser | null }) {
     return (
         <>
             <Navbar />
-            <Box mx="auto" p={6} bg="white" shadow="md" rounded="lg" paddingTop="120px">
+            <Container maxW="6xl" py={16} px={4}>
                 {!user && (
-                    <Center>
-                        <Text>Sorry, could not find this user!</Text>
+                    <Center h="50vh">
+                        <Text fontSize="xl" color="gray.600">
+                            Sorry, could not find this user!
+                        </Text>
                     </Center>
                 )}
                 {user && (
-                    <>
-                        <VStack align="center">
-                            <ChakraImage
-                                boxSize="128px"
-                                borderRadius="full"
-                                objectFit="cover"
-                                src="https://xsgames.co/randomusers/avatar.php?g=pixel"
-                                alt="Profile"
-                            />
-                            <Flex align="center">
-                                <Heading as="h1" size="xl" mr={4}>
-                                    {user.userName}
-                                </Heading>
-                            </Flex>
+                    <VStack spacing={10}>
+                        <Card w="full" variant="elevated" p={6}>
+                            <CardBody>
+                                <VStack spacing={6}>
+                                    <ChakraImage
+                                        boxSize="160px"
+                                        borderRadius="full"
+                                        objectFit="cover"
+                                        src="https://xsgames.co/randomusers/avatar.php?g=pixel"
+                                        alt="Profile"
+                                        shadow="lg"
+                                    />
+                                    
+                                    <VStack spacing={2}>
+                                        <Heading size="xl" color="gray.800">
+                                            {user.userName}
+                                        </Heading>
+                                        <Badge
+                                            px={3}
+                                            py={1}
+                                            colorScheme="gray"
+                                            borderRadius="full"
+                                            fontSize="md"
+                                        >
+                                            {user.bio}
+                                        </Badge>
+                                    </VStack>
 
-                            <HStack>
-                                <Box textAlign="center">
-                                    <Text fontSize="xl" fontWeight="bold">
-                                        {user.posts.length}
-                                    </Text>
-                                    <Text color="gray.600">Posts</Text>
-                                </Box>
-                                <Box textAlign="center">
-                                    <Text fontSize="xl" fontWeight="bold">
-                                        {user.friends.length}
-                                    </Text>
-                                    <Text color="gray.600">Friends</Text>
-                                </Box>
-                            </HStack>
-                            <Box textAlign="center">
-                                <Box className="border-2 px-1" borderRadius="md" color="gray.700">
-                                    {user.bio}
-                                </Box>
-                            </Box>
-                        </VStack>
+                                    <Divider />
 
-                        <Box mt={10}>
-                            <Heading as="h2" size="lg" mb={6} textAlign="center">
+                                    <HStack spacing={12} pt={2}>
+                                        <Stat textAlign="center">
+                                            <StatNumber fontSize="3xl" color="black">
+                                                {user.posts.length}
+                                            </StatNumber>
+                                            <StatLabel fontSize="lg" color="gray.600">
+                                                Posts
+                                            </StatLabel>
+                                        </Stat>
+                                        <Stat textAlign="center">
+                                            <StatNumber fontSize="3xl" color="black">
+                                                {user.friends.length}
+                                            </StatNumber>
+                                            <StatLabel fontSize="lg" color="gray.600">
+                                                Friends
+                                            </StatLabel>
+                                        </Stat>
+                                    </HStack>
+                                </VStack>
+                            </CardBody>
+                        </Card>
+
+                        <Box w="full">
+                            <Heading
+                                as="h2"
+                                size="lg"
+                                mb={8}
+                                color="gray.700"
+                                textAlign="center"
+                            >
                                 Posts
                             </Heading>
-                            <Grid
-                                templateColumns="repeat(auto-fit, minmax(200px, 1fr))"
-                                gap={4}
+                            <SimpleGrid
+                                columns={{ base: 1, md: 2, lg: 3 }}
+                                spacing={6}
+                                w="full"
                             >
                                 {user.posts.map((post) => (
-                                    <Box
+                                    <Card
                                         key={post.id}
-                                        w="100%"
-                                        h="48"
-                                        bg="gray.100"
-                                        rounded="lg"
-                                        display="flex"
-                                        alignItems="center"
-                                        justifyContent="center"
-                                        flexDirection="column"
-                                        padding="30px"
+                                        variant="outline"
+                                        _hover={{
+                                            transform: "translateY(-4px)",
+                                            shadow: "lg",
+                                        }}
+                                        transition="all 0.2s"
                                     >
-                                        {post.image && (
-                                            <ChakraImage
-                                                src={post.image}
-                                                alt={post.title}
-                                                objectFit="cover"
-                                                boxSize="200px"
-                                                mb={2}
-                                                borderRadius="md"
-                                            />
-                                        )}
-                                        <Text>{post.title}</Text>
-                                    </Box>
+                                        <CardBody>
+                                            <VStack spacing={4}>
+                                                {post.image && (
+                                                    <ChakraImage
+                                                        src={post.image}
+                                                        alt={post.title}
+                                                        objectFit="cover"
+                                                        w="full"
+                                                        h="200px"
+                                                        borderRadius="md"
+                                                    />
+                                                )}
+                                                <Text
+                                                    fontSize="lg"
+                                                    fontWeight="medium"
+                                                    color="gray.700"
+                                                >
+                                                    {post.title}
+                                                </Text>
+                                            </VStack>
+                                        </CardBody>
+                                    </Card>
                                 ))}
-                            </Grid>
+                            </SimpleGrid>
                         </Box>
-                    </>
+                    </VStack>
                 )}
-            </Box>
+            </Container>
         </>
     );
 }
