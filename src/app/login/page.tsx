@@ -4,11 +4,19 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { signIn } from "next-auth/react";
-
-/**
- * Created by Jesus Avalos
- * This page utilizes NextAuth.js to have the user sign up.
- */
+import {
+    Box,
+    Button,
+    Flex,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    Input,
+    Text,
+    Heading,
+    Link,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
 
 // Define Zod schema
 const signUpSchema = z.object({
@@ -42,50 +50,66 @@ export default function Login() {
                 setError('apiError', { type: 'manual', message: data.error });
             });
         } else {
-            // Automatically sign in the user after successful sign-up
             await signIn('credentials', {
                 redirect: true, // Prevents automatic redirect
                 redirectTo: '/home',
                 email: data.email,
                 password: data.password,
             });
-            // Redirect or show success message here
-
         }
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen justify-center bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md w-96">
-                <h1 className="text-2xl font-semibold text-center mb-6">Sign in:</h1>
-                <form onSubmit={handleSubmit(handleSignIn)} className="space-y-4">
-                    <div className="flex flex-col">
-                        <label className="mb-1 text-sm font-medium text-gray-700">Email:</label>
-                        <input
+        <Flex align="center" justify="center" minH="100vh" bg="gray.50">
+            <Box bg="white" p={8} rounded="md" shadow="lg" width="full" maxW="md">
+                <Heading as="h1" size="lg" textAlign="center" mb={6}>Sign In</Heading>
+                <form onSubmit={handleSubmit(handleSignIn)}>
+                    <FormControl isInvalid={!!errors.email} mb={4}>
+                        <FormLabel>Email</FormLabel>
+                        <Input
                             type="email"
                             {...register("email")}
-                            className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="Enter your email"
+                            focusBorderColor="black"
                         />
-                        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="mb-1 text-sm font-medium text-gray-700">Password:</label>
-                        <input
+                        <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+                    </FormControl>
+
+                    <FormControl isInvalid={!!errors.password} mb={4}>
+                        <FormLabel>Password</FormLabel>
+                        <Input
                             type="password"
                             {...register("password")}
-                            className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="Enter your password"
+                            focusBorderColor="black"
                         />
-                        {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
-                    </div>
-                    {errors.apiError && <p className="text-red-500 text-xs mt-1">{errors.apiError.message}</p>}
-                    <button
+                        <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+                    </FormControl>
+
+                    {errors.apiError && <Text color="red.500" fontSize="sm" mt={1}>{errors.apiError.message}</Text>}
+
+                    <Link as={NextLink} href="/forgotpass" color="blue.500" fontSize="sm" display="block" textAlign="right" mt={2}>
+                        Forgot Password?
+                    </Link>
+
+                    <Button
                         type="submit"
-                        className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
+                        bg="black"
+                        width="full"
+                        mt={4}
+                        color="white"
                     >
                         Sign In
-                    </button>
+                    </Button>
+
+                    <Text textAlign="center" mt={4}>
+                        Don’t have an account?{" "}
+                        <Link as={NextLink} href="/signup" color="blue.500">
+                            Sign Up
+                        </Link>
+                    </Text>
                 </form>
-            </div>
-        </div>
+            </Box>
+        </Flex>
     );
 }
