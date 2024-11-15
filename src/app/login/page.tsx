@@ -45,7 +45,7 @@ export default function Login() {
             // Automatically sign in the user after successful sign-up
             await signIn('credentials', {
                 redirect: true, // Prevents automatic redirect
-                redirectTo: '/',
+                redirectTo: '/home',
                 email: data.email,
                 password: data.password,
             });
