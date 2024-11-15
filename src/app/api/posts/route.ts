@@ -7,7 +7,7 @@ import { auth } from '@/auth'
 
 export async function POST(request: Request) {
   try {
-  
+
     const session = await auth()
 
     if (!session || !session.user) {
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 
     const userEmail = session.user.email;
 
-   
+
     const user = await prisma.user.findUnique({
       where: { email: userEmail },
     });
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       );
     }
 
-    
+
     const data = await request.json();
     const { postName, description, imageUrl } = data;
 
@@ -39,10 +39,10 @@ export async function POST(request: Request) {
     const newPost = await prisma.post.create({
       data: {
         title: postName,
-        description,
+        content: description,
         published: true,
-        imageUrl,
-        author: { connect: { id: user.id } }, 
+        image: imageUrl,
+        author: { connect: { id: user.id } },
       },
       include: {
         author: {
