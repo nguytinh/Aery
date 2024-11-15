@@ -77,7 +77,6 @@ const HomePage: React.FC = () => {
     if (error) {
         return (
             <>
-                <Navbar />
                 <Box as="main" pt="100px" bg={bgColor} minH="100vh">
                     <Center>
                         <VStack spacing={4}>
@@ -98,7 +97,6 @@ const HomePage: React.FC = () => {
 
     return (
         <>
-            <Navbar />
             <Box as="main" pt="100px" bg={bgColor} minH="100vh">
                 <Container maxW="1200px" py={8}>
                     {/* Header Section */}
