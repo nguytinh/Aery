@@ -17,7 +17,6 @@ import {
     Link,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { mock } from "node:test";
 
 // Define Zod schema
 const signUpSchema = z.object({
@@ -50,6 +49,13 @@ export default function Signup() {
         })
         if (!res.ok) {
             setError('apiError', { type: 'manual', message: 'User already exists.' });
+            return;
+        }
+        const { isUser } = await res.json();
+        if (isUser) {
+            setError('apiError', { type: 'manual', message: 'User already exists.' });
+            console.log('User already exists.');
+            return;
         }
         if (typeof window !== 'undefined') {
             localStorage.setItem('email', data.email);
@@ -108,6 +114,7 @@ export default function Signup() {
                         <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
                     </FormControl>
 
+                    {errors.apiError && <Text color="red.500" fontSize="sm" mt={1}>{errors.apiError.message}</Text>}
                     <Button
                         type="submit"
                         colorScheme="blue"

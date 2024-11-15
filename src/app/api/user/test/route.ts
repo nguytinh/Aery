@@ -1,7 +1,7 @@
 import { prisma } from "@/app/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
     const {email} = await req.json()
     console.log('hitting server')
     if (!email) {
