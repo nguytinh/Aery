@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
     Box,
     Button,
@@ -36,31 +36,48 @@ export default function Signup() {
     const { register, handleSubmit, setError, formState: { errors } } = useForm<SignUpFormData>({
         resolver: zodResolver(signUpSchema),
     });
+    const router = useRouter();
 
     const handleSignUp = async (data: SignUpFormData) => {
-        const response = await fetch("/api/user/signup", {
-            method: "POST",
+        // Check if user exists in db
+        const res = await fetch('/api/user/test', {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) {
-            response.json().then((data) => {
-                setError('apiError', { type: 'manual', message: data.error });
-            });
-            return;
-        } else {
-            // Automatically sign in the user after successful sign-up
-            await signIn('credentials', {
-                redirect: true, // Prevents automatic redirect
-                redirectTo: '/createProfile',
-                email: data.email,
-                password: data.password,
-            });
+            body: JSON.stringify({ email: data.email })
+        })
+        if (!res.ok) {
+            setError('apiError', { type: 'manual', message: 'User already exists.' });
         }
-        const user = await response.json();
-        console.log("Signed up user:", user);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('email', data.email);
+            localStorage.setItem('password', data.password);
+            router.push('/profile/create');
+        }
+        // const response = await fetch("/api/user/signup", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(data),
+        // });
+        // if (!response.ok) {
+        //     response.json().then((data) => {
+        //         setError('apiError', { type: 'manual', message: data.error });
+        //     });
+        //     return;
+        // } else {
+        //     // Automatically sign in the user after successful sign-up
+        //     await signIn('credentials', {
+        //         redirect: true, // Prevents automatic redirect
+        //         redirectTo: '/createProfile',
+        //         email: data.email,
+        //         password: data.password,
+        //     });
+        // }
+        // const user = await response.json();
+        // console.log("Signed up user:", user);
     };
 
     return (
