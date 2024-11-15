@@ -1,18 +1,30 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { ClientUser } from "@/app/interfaces/primsa";
 import UserProfile from "./UserProfile";
+import { prisma } from "@/app/db";
 
 export default async function Page({
-  params,
+    params,
 }: {
-  params: { username: string };
+    params: { username: string };
 }) {
-  const prisma = new PrismaClient();
-  const user = await prisma.user.findUnique({
-    where: {
-      userName: params.username,
-    },
-    include: { posts: true },
-  });
+    const user = await prisma.user.findUnique({
+        where: {
+            userName: params.username,
+        },
+        select: {
+            id: true,
+            userName: true,
+            bio: true,
+            posts: true,
+            friends: {
+                select: {
+                    id: true,
+                },
+            },
+            email: true,
+            name: true,
+        }
+    });
 
-  return <UserProfile user={user} />;
+    return <UserProfile user={user as ClientUser} />;
 }
