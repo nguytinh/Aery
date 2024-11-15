@@ -17,6 +17,7 @@ import {
     Link,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { mock } from "node:test";
 
 // Define Zod schema
 const signUpSchema = z.object({
@@ -50,7 +51,7 @@ export default function Signup() {
         } else {
             await signIn('credentials', {
                 redirect: true,
-                redirectTo: '/',
+                redirectTo: '/createProfile',
                 email: data.email,
                 password: data.password,
             });

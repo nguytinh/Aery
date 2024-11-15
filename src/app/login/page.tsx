@@ -52,7 +52,7 @@ export default function Login() {
         } else {
             await signIn('credentials', {
                 redirect: true,
-                redirectTo: '/',
+                redirectTo: '/home',
                 email: data.email,
                 password: data.password,
             });
