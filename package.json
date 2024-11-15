@@ -11,23 +11,23 @@
     "seed": "cross-env NODE_OPTIONS='--loader ts-node/esm' ts-node src/lib/seed.ts"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.7.2",
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/next-js": "^2.4.2",
     "@chakra-ui/react": "^2.10.3",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@hookform/resolvers": "^3.9.1",
     "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
     "framer-motion": "^11.11.11",
     "next": "^15.0.2",
+    "next-auth": "^5.0.0-beta.25",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
-    "react-icons": "^5.3.0",
-    "@auth/prisma-adapter": "^2.7.2",
-    "@hookform/resolvers": "^3.9.1",
-    "bcryptjs": "^2.4.3",
-    "next-auth": "^5.0.0-beta.25",
     "react-hook-form": "^7.53.1",
+    "react-icons": "^5.3.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -38,7 +38,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.16",
     "postcss": "^8",
-    "prisma": "^5.21.1",
+    "prisma": "^5.22.0",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
