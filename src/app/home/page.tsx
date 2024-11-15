@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import ScrollToTop from '../../components/ScrollToTop';
 import { FaPlus } from 'react-icons/fa';
 import { MdRefresh } from 'react-icons/md';
+import { useRouter } from 'next/navigation';
 
 interface Author {
     id: number;
@@ -43,6 +44,8 @@ const HomePage: React.FC = () => {
 
     const bgColor = useColorModeValue('gray.50', 'gray.900');
     const headerBg = useColorModeValue('white', 'gray.800');
+    
+    const router = useRouter()
 
     useEffect(() => {
         fetchPosts();
@@ -121,7 +124,7 @@ const HomePage: React.FC = () => {
                                         leftIcon={<Icon as={FaPlus} />}
                                         colorScheme="blue"
                                         size="md"
-                                        onClick={() => {/* Handle new post */ }}
+                                        onClick={() => {router.push('/createpost') }}
                                     >
                                         New Post
                                     </Button>
