@@ -50,7 +50,7 @@ export default function Signup() {
         } else {
             await signIn('credentials', {
                 redirect: true,
-                redirectTo: '/',
+                redirectTo: '/home',
                 email: data.email,
                 password: data.password,
             });
