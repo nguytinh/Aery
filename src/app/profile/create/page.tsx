@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
+import { signIn } from "next-auth/react";
 
 export default function CreateProfile() {
     const [formData, setFormData] = useState({
@@ -83,9 +84,10 @@ export default function CreateProfile() {
                 console.log(`${key}: ${value}`);
             }
 
+
             const response = await fetch('/api/user/signup', {
                 method: 'POST',
-                body: submitData,
+                body: JSON.stringify(formData)
             });
 
             if (!response.ok) {
@@ -94,6 +96,20 @@ export default function CreateProfile() {
 
             setShowAlert(true);
             setTimeout(() => setShowAlert(false), 5000);
+            // remove email and password from localStorage
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('email');
+                localStorage.removeItem('password');
+            }
+
+            // sign user in
+            await signIn('credentials', {
+                redirect: true, // Prevents automatic redirect
+                redirectTo: '/',
+                email: formData.email,
+                password: formData.password,
+            });
+
 
             // Optional: Reset form or redirect
             // setFormData({ firstName: "", lastName: "", aboutMe: "" });
