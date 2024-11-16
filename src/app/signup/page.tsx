@@ -76,12 +76,12 @@ export default function Signup() {
         //     return;
         // } else {
         //     // Automatically sign in the user after successful sign-up
-        //     await signIn('credentials', {
-        //         redirect: true, // Prevents automatic redirect
-        //         redirectTo: '/createProfile',
-        //         email: data.email,
-        //         password: data.password,
-        //     });
+        // await signIn('credentials', {
+        //     redirect: true, // Prevents automatic redirect
+        //     redirectTo: '/createProfile',
+        //     email: data.email,
+        //     password: data.password,
+        // });
         // }
         // const user = await response.json();
         // console.log("Signed up user:", user);
