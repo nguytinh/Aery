@@ -51,8 +51,8 @@ export default function Login() {
             });
         } else {
             await signIn('credentials', {
-                redirect: true,
-                redirectTo: '/',
+                redirect: true, // Prevents automatic redirect
+                redirectTo: '/home',
                 email: data.email,
                 password: data.password,
             });
@@ -74,7 +74,7 @@ export default function Login() {
                         />
                         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
                     </FormControl>
-                    
+
                     <FormControl isInvalid={!!errors.password} mb={4}>
                         <FormLabel>Password</FormLabel>
                         <Input

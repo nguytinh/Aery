@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
     Box,
     Button,
@@ -27,36 +27,64 @@ const signUpSchema = z.object({
         .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
         .regex(/[a-z]/, "Password must contain at least one lowercase letter")
         .regex(/[0-9]/, "Password must contain at least one number"),
+    apiError: z.string().optional(),
 });
 
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export default function Signup() {
-    const { register, handleSubmit, formState: { errors } } = useForm<SignUpFormData>({
+    const { register, handleSubmit, setError, formState: { errors } } = useForm<SignUpFormData>({
         resolver: zodResolver(signUpSchema),
     });
+    const router = useRouter();
 
     const handleSignUp = async (data: SignUpFormData) => {
-        const response = await fetch("/api/user/signup", {
-            method: "POST",
+        // Check if user exists in db
+        const res = await fetch('/api/user/test', {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) {
-            console.error("Failed to sign up:", response);
+            body: JSON.stringify({ email: data.email })
+        })
+        if (!res.ok) {
+            setError('apiError', { type: 'manual', message: 'User already exists.' });
             return;
-        } else {
-            await signIn('credentials', {
-                redirect: true,
-                redirectTo: '/',
-                email: data.email,
-                password: data.password,
-            });
         }
-        const user = await response.json();
-        console.log("Signed up user:", user);
+        const { isUser } = await res.json();
+        if (isUser) {
+            setError('apiError', { type: 'manual', message: 'User already exists.' });
+            console.log('User already exists.');
+            return;
+        }
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('email', data.email);
+            localStorage.setItem('password', data.password);
+            router.push('/profile/create');
+        }
+        // const response = await fetch("/api/user/signup", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(data),
+        // });
+        // if (!response.ok) {
+        //     response.json().then((data) => {
+        //         setError('apiError', { type: 'manual', message: data.error });
+        //     });
+        //     return;
+        // } else {
+        //     // Automatically sign in the user after successful sign-up
+        // await signIn('credentials', {
+        //     redirect: true, // Prevents automatic redirect
+        //     redirectTo: '/createProfile',
+        //     email: data.email,
+        //     password: data.password,
+        // });
+        // }
+        // const user = await response.json();
+        // console.log("Signed up user:", user);
     };
 
     return (
@@ -74,7 +102,7 @@ export default function Signup() {
                         />
                         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
                     </FormControl>
-                    
+
                     <FormControl isInvalid={!!errors.password} mb={4}>
                         <FormLabel>Password</FormLabel>
                         <Input
@@ -86,6 +114,7 @@ export default function Signup() {
                         <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
                     </FormControl>
 
+                    {errors.apiError && <Text color="red.500" fontSize="sm" mt={1}>{errors.apiError.message}</Text>}
                     <Button
                         type="submit"
                         colorScheme="blue"
@@ -93,7 +122,7 @@ export default function Signup() {
                         mt={4}
                     >
                         Sign Up
-                    </Button>
+                    </Button >
 
                     <Text textAlign="center" mt={4}>
                         Already have an account?{" "}
@@ -101,8 +130,8 @@ export default function Signup() {
                             Log In
                         </Link>
                     </Text>
-                </form>
-            </Box>
-        </Flex>
+                </form >
+            </Box >
+        </Flex >
     );
 }

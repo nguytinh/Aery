@@ -16,7 +16,10 @@ model User {
     bio       String?
     createdAt DateTime  @default(now())
     posts     Post[]
+    friends   User[]    @relation("Friends")
     Session   Session[]
+
+    User User[] @relation("Friends")
 }
 
 model Session {
