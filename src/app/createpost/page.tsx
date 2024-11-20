@@ -46,7 +46,6 @@ const CreatePost: React.FC = () => {
   if (status != "authenticated") {
     return (
       <div>
-        <Navbar />
         <Box bg="white" p={8} rounded="md" shadow="lg" width="full" maxW="md">
           <p>Please Sign in to make a post!</p>
         </Box>
