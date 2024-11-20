@@ -1,67 +1,82 @@
-import NextAuth, {User} from "next-auth"
-// import { PrismaAdapter } from "@auth/prisma-adapter"
-// import { prisma } from "@/app/db"
+import NextAuth, { DefaultSession, User } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { signInSchema } from "./lib/zod"
-// Your own logic for dealing with plaintext password strings; be careful!
-// import { saltAndHashPassword } from "@/utils/password"
-// import { signInSchema } from "./lib/zod"
- 
-// Get's the user from the database
-// async function getUserFromDb(email: string, hash: string) {
-//   return await prisma.user.findFirst({
-//     where: {
-//       email,
-//       password: hash,
-//     },
-//   })
-// }
+
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    username?: string;
+  }
+}
+
 interface ExtendedUser extends User {
-  username: string; // Add custom property
+  username: string;
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
       credentials: {
-        email: {label: "Email", type: "email", placeholder: "john@gmail.com"},
-        password: {label: "Password", type: "password"},
+        email: { label: "Email", type: "email", placeholder: "john@gmail.com" },
+        password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials) => {
-
-        let user = null
- 
-        // logic to salt and hash password
-        const { email, password } = await signInSchema.parseAsync(credentials)
-        
-        // logic to verify if the user exists
-        const resp = await fetch('http://localhost:3000/api/user/signin', {
+      async authorize(credentials) {
+        try {
+          const { email, password } = await signInSchema.parseAsync(credentials)
+          
+          const resp = await fetch('http://localhost:3000/api/user/signin', {
             method: 'POST',
-            body: JSON.stringify({email, password}),
+            body: JSON.stringify({ email, password }),
             headers: {
-                'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             }
-            })
-        if (!resp.ok) {
+          })
+
+          if (!resp.ok) {
             throw new Error('Failed to sign in.')
+          }
+
+          const userData = await resp.json()
+          console.log('User data from API:', userData) // Debug log
+
+          // Make sure we're returning the correct structure
+          return {
+            id: userData.id,
+            email: userData.email,
+            username: userData.username || userData.userName, // Handle both cases
+          } as ExtendedUser
+        } catch (error) {
+          console.error('Authorization error:', error)
+          return null
         }
-        user = await resp.json()
-        return user
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-        // Extend user to contain username 
-        if (user) {
-            token.username = (user as ExtendedUser).username 
-        }
-        return token
-    },
-    async session({ session, token}) {
-        return { ...session, username: token.username }
+      console.log('JWT Callback - Token:', token)
+      console.log('JWT Callback - User:', user)
+      
+      if (user) {
+        // Make sure we're setting the username in the token
+        token.username = (user as ExtendedUser).username
       }
-  }
+      
+      console.log('JWT Callback - Final Token:', token)
+      return token
+    },
+    async session({ session, token }) {
+      console.log('Session Callback - Initial Session:', session)
+      console.log('Session Callback - Token:', token)
+      
+      // Make sure we're adding username to the session
+      const updatedSession = {
+        ...session,
+        username: token.username,
+      }
+      
+      console.log('Session Callback - Final Session:', updatedSession)
+      return updatedSession
+    }
+  },
+  debug: true, // Enable debugging
 })

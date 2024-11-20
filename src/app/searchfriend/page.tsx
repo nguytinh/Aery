@@ -27,9 +27,10 @@ import {
   useDisclosure,
   Link as ChakraLink
 } from "@chakra-ui/react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "../../components/navbar";
+import { useSession } from "next-auth/react";
 
 interface Friend {
   id: number;
@@ -39,6 +40,7 @@ interface Friend {
 }
 
 const FriendsPage = () => {
+  const { data: session, status } = useSession();
   const [friends, setFriends] = useState<Friend[]>([]);
   const [newFriend, setNewFriend] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +48,32 @@ const FriendsPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
+
+  // Fetch friends when component mounts
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const response = await fetch('/api/friends/list');
+        if (!response.ok) {
+          throw new Error('Failed to fetch friends');
+        }
+        const data = await response.json();
+        setFriends(data);
+      } catch (err) {
+        toast({
+          title: "Error",
+          description: err instanceof Error ? err.message : "Failed to fetch friends",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    };
+
+    if (status === 'authenticated') {
+      fetchFriends();
+    }
+  }, [status, toast]);
 
   const handleAddFriend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +94,7 @@ const FriendsPage = () => {
         throw new Error(data.error || 'Failed to add friend');
       }
 
-      setFriends([...friends, data]);
+      setFriends(prevFriends => [...prevFriends, data]);
       setNewFriend("");
       
       toast({
@@ -110,7 +138,7 @@ const FriendsPage = () => {
         throw new Error(data.error || 'Failed to remove friend');
       }
 
-      setFriends(friends.filter(friend => friend.id !== removingFriendId));
+      setFriends(prevFriends => prevFriends.filter(friend => friend.id !== removingFriendId));
       
       toast({
         title: "Friend removed successfully",
@@ -131,6 +159,10 @@ const FriendsPage = () => {
       setRemovingFriendId(null);
     }
   };
+
+  if (status !== 'authenticated') {
+    return null;
+  }
 
   return (
     <Box>

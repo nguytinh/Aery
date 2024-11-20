@@ -1,107 +1,92 @@
 // app/api/friends/add/route.ts
-import { PrismaClient } from '@prisma/client';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import { prisma } from "@/app/db";
 import { auth } from "@/auth";
 
-const prisma = new PrismaClient();
-
-interface AddFriendRequest {
-  userName: string;
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const body: AddFriendRequest = await request.json();
-    const { userName } = body;
-    
-    if (!userName) {
-      return NextResponse.json(
-        { error: 'Username is required' },
-        { status: 400 }
-      );
-    }
-
-    const session = await auth();
-
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
-    }
-
-    // Get current user from session
-    const currentUser = await prisma.user.findUnique({
-      where: { email: session.user?.email },
-    });
-
-    if (!currentUser) {
-      return NextResponse.json(
-        { error: 'Current user not found' },
-        { status: 404 }
-      );
-    }
-
-    // Find the friend by username
-    const friendToAdd = await prisma.user.findUnique({
-      where: { userName },
-      select: {
-        id: true,
-        userName: true,
-        name: true,
-        email: true
-      }
-    });
-
-    if (!friendToAdd) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
-    }
-
-    // Check if already friends
-    const alreadyFriends = await prisma.user.findFirst({
-      where: {
-        id: currentUser.id,
-        friends: {
-          some: {
-            id: friendToAdd.id
-          }
+export async function POST(req: Request) {
+    try {
+        const session = await auth();
+        if (!session?.username) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-      }
-    });
 
-    if (alreadyFriends) {
-      return NextResponse.json(
-        { error: 'Already friends with this user' },
-        { status: 400 }
-      );
-    }
+        const { userName } = await req.json();
 
-    // Add the friend relationship
-    const updatedUser = await prisma.user.update({
-      where: {
-        id: currentUser.id
-      },
-      data: {
-        friends: {
-          connect: {
-            id: friendToAdd.id
-          }
+        // Find the friend to add
+        const friendToAdd = await prisma.user.findUnique({
+            where: { userName }
+        });
+
+        if (!friendToAdd) {
+            return NextResponse.json(
+                { error: "User not found" },
+                { status: 404 }
+            );
         }
-      }
-    });
 
-    return NextResponse.json(friendToAdd);
-  } catch (error) {
-    console.error('Error adding friend:', error);
-    return NextResponse.json(
-      { error: 'Failed to add friend' },
-      { status: 500 }
-    );
-  } finally {
-    await prisma.$disconnect();
-  }
+        // Find current user
+        const currentUser = await prisma.user.findFirst({
+            where: { userName: session.username }
+        });
+
+        if (!currentUser) {
+            return NextResponse.json(
+                { error: "Current user not found" },
+                { status: 404 }
+            );
+        }
+
+        // Check if already friends
+        const alreadyFriends = await prisma.user.findFirst({
+            where: {
+                id: currentUser.id,
+                friends: {
+                    some: {
+                        id: friendToAdd.id
+                    }
+                }
+            }
+        });
+
+        if (alreadyFriends) {
+            return NextResponse.json(
+                { error: "Already friends with this user" },
+                { status: 400 }
+            );
+        }
+
+        // Add friend connection
+        await prisma.user.update({
+            where: { id: currentUser.id },
+            data: {
+                friends: {
+                    connect: { id: friendToAdd.id }
+                }
+            }
+        });
+
+        // Connect the other way too for bidirectional friendship
+        await prisma.user.update({
+            where: { id: friendToAdd.id },
+            data: {
+                friends: {
+                    connect: { id: currentUser.id }
+                }
+            }
+        });
+
+        // Return the added friend's data
+        return NextResponse.json({
+            id: friendToAdd.id,
+            userName: friendToAdd.userName,
+            name: friendToAdd.name,
+            email: friendToAdd.email
+        });
+    } catch (error) {
+        console.error("Error adding friend:", error);
+        return NextResponse.json(
+            { error: "Failed to add friend" },
+            { status: 500 }
+        );
+    }
 }
