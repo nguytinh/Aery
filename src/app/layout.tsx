@@ -14,6 +14,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                 {/* <UserAvatar /> */}
                 <SessionProvider>
                     <Provider>
+                        <Navbar />
                         {children}
                         <ToastContainer />
                     </Provider>
