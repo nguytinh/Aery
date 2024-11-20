@@ -2,7 +2,6 @@
 
 import { useSession } from "next-auth/react"
 import { useForm } from "react-hook-form";
-import Navbar from '../../components/navbar';
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Box, Flex, Heading, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
@@ -46,7 +45,7 @@ const CreatePost: React.FC = () => {
   if (status != "authenticated") {
     return (
       <div>
-        <Navbar />
+        {/* <Navbar /> */}
         <Box bg="white" p={8} rounded="md" shadow="lg" width="full" maxW="md">
           <p>Please Sign in to make a post!</p>
         </Box>
@@ -58,27 +57,27 @@ const CreatePost: React.FC = () => {
   //post needs a category
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <Flex align="center" justify="center" minH="100vh" bg="gray.50">
 
         <Box bg="white" p={8} rounded="md" shadow="lg" width="full" maxW="md">
           <Heading as="h1" size="lg" textAlign="center" mb={6}>Create Your Post Below:</Heading>
           <form onSubmit={handleSubmit(handleCreatePost)}>
-            <FormControl>
+            <FormControl isInvalid={!!errors.postName}>
               <FormLabel>Post Name</FormLabel>
               <Input type='text'
                 {...register("postName")}
               />
             </FormControl>
 
-            <FormControl>
+            <FormControl isInvalid={!!errors.description}>
               <FormLabel>Post Description</FormLabel>
               <Input type='text'
                 {...register("description")}
               />
             </FormControl>
 
-            <FormControl>
+            <FormControl isInvalid={!!errors.imageUrl}>
               <FormLabel>Image URL</FormLabel>
               <Input {...register("imageUrl")}
                 placeholder="https://imageurl.domain"
