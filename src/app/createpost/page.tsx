@@ -2,15 +2,14 @@
 
 import { useSession } from "next-auth/react"
 import { useForm } from "react-hook-form";
-import Navbar from '../../components/navbar';
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Box, Flex, Heading, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
+import { Box, Flex, Heading, FormControl, FormLabel, Input, Button, FormErrorMessage, Center, Spinner, Text, VStack } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 
 
 const postSchema = z.object({
-  postName: z.string(),
+  postName: z.string().min(3),
   description: z.string(),
   imageUrl: z.string()
 });
@@ -43,7 +42,18 @@ const CreatePost: React.FC = () => {
     }
   }
 
-  if (status != "authenticated") {
+  if (status === "loading") {
+    return (
+      <Center h="400px">
+        <VStack spacing={4}>
+          <Spinner size="xl" thickness="4px" speed="0.65s" color="blue.500" />
+          <Text color="gray.500">Loading...</Text>
+        </VStack>
+      </Center>
+    )
+  }
+
+  if (status == "unauthenticated") {
     return (
       <div>
         <Box bg="white" p={8} rounded="md" shadow="lg" width="full" maxW="md">
@@ -57,27 +67,29 @@ const CreatePost: React.FC = () => {
   //post needs a category
   return (
     <div>
-      <Navbar />
       <Flex align="center" justify="center" minH="100vh" bg="gray.50">
 
         <Box bg="white" p={8} rounded="md" shadow="lg" width="full" maxW="md">
           <Heading as="h1" size="lg" textAlign="center" mb={6}>Create Your Post Below:</Heading>
           <form onSubmit={handleSubmit(handleCreatePost)}>
-            <FormControl>
+            <FormControl isInvalid={!!errors.postName}>
               <FormLabel>Post Name</FormLabel>
               <Input type='text'
-                {...register("postName")}
+                {...register("postName", { required: "Post Name is required" })}
               />
+              {errors.postName && (
+                <FormErrorMessage>{errors.postName.message}</FormErrorMessage>
+              )}
             </FormControl>
 
-            <FormControl>
+            <FormControl isInvalid={!!errors.description}>
               <FormLabel>Post Description</FormLabel>
               <Input type='text'
                 {...register("description")}
               />
             </FormControl>
 
-            <FormControl>
+            <FormControl isInvalid={!!errors.imageUrl}>
               <FormLabel>Image URL</FormLabel>
               <Input {...register("imageUrl")}
                 placeholder="https://imageurl.domain"
