@@ -5,8 +5,8 @@ import bcrypt from 'bcryptjs';
 export async function POST(req: NextRequest) {
     console.log('Sign up API hit.');
 
-    const { email, password, firstName, lastName, aboutMe} = await req.json();
-    if (!email || !password  || !aboutMe || !firstName || !lastName) {
+    const { email, password, firstName, lastName, userName, aboutMe} = await req.json();
+    if (!email || !password  || !aboutMe || !firstName || !lastName || !userName) {
         return NextResponse.json('Invalid input.', { status: 400, statusText: 'Invalid input.' });
     }
 
@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
         data: {
             name: firstName + ' ' + lastName,
             email,
+            userName,
             password: hashedPassword, // Store hashed password
             bio: aboutMe,
         },

@@ -56,7 +56,6 @@ const CreatePost: React.FC = () => {
   if (status == "unauthenticated") {
     return (
       <div>
-        {/* <Navbar /> */}
         <Box bg="white" p={8} rounded="md" shadow="lg" width="full" maxW="md">
           <p>Please Sign in to make a post!</p>
         </Box>
@@ -68,7 +67,6 @@ const CreatePost: React.FC = () => {
   //post needs a category
   return (
     <div>
-      {/* <Navbar /> */}
       <Flex align="center" justify="center" minH="100vh" bg="gray.50">
 
         <Box bg="white" p={8} rounded="md" shadow="lg" width="full" maxW="md">
