@@ -13,7 +13,6 @@ import {
     Icon,
     Fade
 } from '@chakra-ui/react';
-import Navbar from '../../components/navbar';
 import Post from '../../components/Post';
 import { useEffect, useState } from 'react';
 import ScrollToTop from '../../components/ScrollToTop';

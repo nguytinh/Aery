@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react"
 import { useEffect } from 'react';
 
 const Navbar: React.FC = () => {
-    const { status } = useSession()
+    const { status, data } = useSession()
     const router = useRouter();
     const pathname = usePathname();
 
@@ -26,8 +26,8 @@ const Navbar: React.FC = () => {
         }
     };
     useEffect(() => {
-        console.log(status)
-    }, [status])
+        console.log(status, data)
+    }, [status, data])
 
     if (status === 'authenticated') {
         return (
@@ -73,7 +73,7 @@ const Navbar: React.FC = () => {
                         </Link>
 
                         <Link
-                            onClick={() => handleNavigation('/profile/tinhnguy')}
+                            onClick={() => handleNavigation('/profile/')}
                             color="gray.700"
                             fontWeight="semibold"
                             cursor="pointer"

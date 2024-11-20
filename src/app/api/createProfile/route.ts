@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { auth } from '@/auth';
-import { redirect } from 'next/navigation';
 
 const prisma = new PrismaClient();
 
@@ -35,7 +34,6 @@ export async function POST(request: Request) {
     }
 
     // Handle profile image upload here if needed
-    let imageUrl = null;
     if (profileImage) {
       // Add your image upload logic here
       // imageUrl = await uploadImage(profileImage);
