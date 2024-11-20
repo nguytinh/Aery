@@ -35,7 +35,6 @@ export async function POST(request: Request) {
     const data = await request.json();
     const { postName, description, imageUrl } = data;
 
-    // Create the new post linked to the authenticated user
     const newPost = await prisma.post.create({
       data: {
         title: postName,
