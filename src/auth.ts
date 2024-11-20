@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, {User} from "next-auth"
 // import { PrismaAdapter } from "@auth/prisma-adapter"
 // import { prisma } from "@/app/db"
 import Credentials from "next-auth/providers/credentials"
@@ -16,6 +16,9 @@ import { signInSchema } from "./lib/zod"
 //     },
 //   })
 // }
+interface ExtendedUser extends User {
+  username: string; // Add custom property
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -30,10 +33,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         let user = null
  
-        // // // logic to salt and hash password
+        // logic to salt and hash password
         const { email, password } = await signInSchema.parseAsync(credentials)
         
-        // // // logic to verify if the user exists
+        // logic to verify if the user exists
         const resp = await fetch('http://localhost:3000/api/user/signin', {
             method: 'POST',
             body: JSON.stringify({email, password}),
@@ -49,4 +52,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+        // Extend user to contain username 
+        if (user) {
+            token.username = (user as ExtendedUser).username 
+        }
+        return token
+    },
+    async session({ session, token}) {
+        return { ...session, username: token.username }
+      }
+  }
 })
