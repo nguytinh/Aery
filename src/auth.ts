@@ -17,7 +17,7 @@ import { signInSchema } from "./lib/zod"
 //   })
 // }
 interface ExtendedUser extends User {
-  username: string; // Add custom property
+  userName: string; // Add custom property
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -48,15 +48,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new Error('Failed to sign in.')
         }
         user = await resp.json()
+        console.log(user, 'user')
         return user
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user}) {
         // Extend user to contain username 
         if (user) {
-            token.username = (user as ExtendedUser).username 
+            token.username = (user as ExtendedUser).userName 
+        } else {
         }
         return token
     },
