@@ -25,6 +25,7 @@ export default function CreateProfile() {
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
+        userName: "",
         aboutMe: "",
         email: "",
         password: ""
@@ -87,6 +88,9 @@ export default function CreateProfile() {
 
             const response = await fetch('/api/user/signup', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(formData)
             });
 
@@ -272,6 +276,22 @@ export default function CreateProfile() {
                                 <Input
                                     type="text"
                                     value={formData.lastName}
+                                    onChange={handleChange}
+                                    size="lg"
+                                    borderColor="gray.200"
+                                    _hover={{ borderColor: "gray.300" }}
+                                    _focus={{ borderColor: "black", boxShadow: "none" }}
+                                    bg="white"
+                                />
+                            </FormControl>
+
+                            <FormControl id="userName" isRequired>
+                                <FormLabel color="black" fontSize="sm" fontWeight="medium">
+                                    Username
+                                </FormLabel>
+                                <Input
+                                    type="text"
+                                    value={formData.userName}
                                     onChange={handleChange}
                                     size="lg"
                                     borderColor="gray.200"
