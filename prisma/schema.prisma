@@ -68,5 +68,6 @@ model Streak {
   user    User     @relation(fields: [userId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
   categoryId Int 
+  currentStreak Int @default(0)
   @@unique([userId, categoryId])
 }

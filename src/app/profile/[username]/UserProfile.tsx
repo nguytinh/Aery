@@ -20,8 +20,20 @@ import {
     Divider,
     Badge,
 } from "@chakra-ui/react";
+import { Flame } from "lucide-react";
 
-export default function UserProfile({ user }: { user: ClientUser | null }) {
+interface ExtendedClientUser extends ClientUser {
+    streaks: {
+        id: number;
+        category: {
+            id: number;
+            name: string;
+        };
+        currentStreak: number;
+    }[];
+}
+
+export default function UserProfile({ user }: { user: ExtendedClientUser | null }) {
     return (
         <>
             <Navbar />
@@ -35,6 +47,7 @@ export default function UserProfile({ user }: { user: ClientUser | null }) {
                 )}
                 {user && (
                     <VStack spacing={10}>
+                        {/* Profile Card */}
                         <Card w="full" variant="elevated" p={6}>
                             <CardBody>
                                 <VStack spacing={6}>
@@ -81,11 +94,20 @@ export default function UserProfile({ user }: { user: ClientUser | null }) {
                                                 Friends
                                             </StatLabel>
                                         </Stat>
+                                        <Stat textAlign="center">
+                                            <StatNumber fontSize="3xl" color="black">
+                                                {user.Streaks.length}
+                                            </StatNumber>
+                                            <StatLabel fontSize="lg" color="gray.600">
+                                                Active Streaks
+                                            </StatLabel>
+                                        </Stat>
                                     </HStack>
                                 </VStack>
                             </CardBody>
                         </Card>
 
+                        {/* Posts Section */}
                         <Box w="full">
                             <Heading
                                 as="h2"
@@ -130,6 +152,60 @@ export default function UserProfile({ user }: { user: ClientUser | null }) {
                                                 >
                                                     {post.title}
                                                 </Text>
+                                            </VStack>
+                                        </CardBody>
+                                    </Card>
+                                ))}
+                            </SimpleGrid>
+                        </Box>
+
+                        {/* Streaks Section */}
+                        <Box w="full">
+                            <Heading
+                                as="h2"
+                                size="lg"
+                                mb={8}
+                                color="gray.700"
+                                textAlign="center"
+                            >
+                                Active Streaks
+                            </Heading>
+                            <SimpleGrid
+                                columns={{ base: 1, md: 2, lg: 3 }}
+                                spacing={6}
+                                w="full"
+                            >
+                                {user.Streaks.map((streak) => (
+                                    <Card
+                                        key={streak.id}
+                                        variant="outline"
+                                        _hover={{
+                                            transform: "translateY(-4px)",
+                                            shadow: "lg",
+                                        }}
+                                        transition="all 0.2s"
+                                    >
+                                        <CardBody>
+                                            <VStack spacing={4} align="stretch">
+                                                <HStack justify="space-between" align="center">
+                                                    <Text
+                                                        fontSize="lg"
+                                                        fontWeight="medium"
+                                                        color="gray.700"
+                                                    >
+                                                        {streak.category.name}
+                                                    </Text>
+                                                    <HStack spacing={1} color="orange.500">
+                                                        <Flame size={20} />
+                                                        <Text
+                                                            fontSize="md"
+                                                            fontWeight="bold"
+                                                            
+                                                        >
+                                                            {streak.currentStreak} days
+                                                        </Text>
+                                                    </HStack>
+                                                </HStack>
                                             </VStack>
                                         </CardBody>
                                     </Card>

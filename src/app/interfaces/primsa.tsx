@@ -1,3 +1,5 @@
+
+
 interface ClientUser {
     id: number;
     email: string;
@@ -6,6 +8,25 @@ interface ClientUser {
     bio?: string | null;
     posts: Post[];
     friends: ClientUser[];
+    Streaks: Streak[];
+}
+
+interface Streak {
+    id: number;
+    userId: number;
+    user: ClientUser;
+    categoryId: number;
+    category: Category;
+    currentStreak: number;
+}
+
+interface Category {
+    id: number;
+    name: string;
+    description?: string | null;
+    streaks: Streak[];
+    users: ClientUser[];
+    posts: Post[];
 }
 
 interface Session {
@@ -26,4 +47,4 @@ interface Post {
     image?: string | null;
 }
 
-export type { ClientUser, Session, Post };
+export type { ClientUser, Session, Post, Streak, Category };
