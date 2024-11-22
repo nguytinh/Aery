@@ -37,15 +37,7 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        // Map userName to username for NextAuth compatibility
-        const responseData = {
-            id: user.id,
-            email: user.email,
-            username: user.userName, // Map from userName to username
-        }
-        
-        console.log('API Response:', responseData) // Debug log
-        return NextResponse.json(responseData)
+        return NextResponse.json(user)
     } catch (error) {
         console.error('Signin error:', error)
         return NextResponse.json(

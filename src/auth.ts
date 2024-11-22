@@ -9,7 +9,7 @@ declare module "next-auth" {
 }
 
 interface ExtendedUser extends User {
-  username: string;
+  userName: string; // Add custom property
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -20,7 +20,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        try {
           const { email, password } = await signInSchema.parseAsync(credentials)
           
           const resp = await fetch('http://localhost:3000/api/user/signin', {
@@ -35,48 +34,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new Error('Failed to sign in.')
           }
 
-          const userData = await resp.json()
-          console.log('User data from API:', userData) // Debug log
-
-          // Make sure we're returning the correct structure
-          return {
-            id: userData.id,
-            email: userData.email,
-            username: userData.username || userData.userName, // Handle both cases
-          } as ExtendedUser
-        } catch (error) {
-          console.error('Authorization error:', error)
-          return null
-        }
-      },
-    }),
+        const user = await resp.json()
+        return user
+    }}),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      console.log('JWT Callback - Token:', token)
-      console.log('JWT Callback - User:', user)
-      
-      if (user) {
-        // Make sure we're setting the username in the token
-        token.username = (user as ExtendedUser).username
-      }
-      
-      console.log('JWT Callback - Final Token:', token)
-      return token
+    async jwt({ token, user}) {
+        // Extend user to contain username 
+        if (user) {
+            token.username = (user as ExtendedUser).userName 
+        } else {
+        }
+        return token
     },
-    async session({ session, token }) {
-      console.log('Session Callback - Initial Session:', session)
-      console.log('Session Callback - Token:', token)
-      
-      // Make sure we're adding username to the session
-      const updatedSession = {
-        ...session,
-        username: token.username,
+    async session({ session, token}) {
+        return { ...session, username: token.username }
       }
-      
-      console.log('Session Callback - Final Session:', updatedSession)
-      return updatedSession
     }
-  },
-  debug: true, // Enable debugging
-})
+  })
