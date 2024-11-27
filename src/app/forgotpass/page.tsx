@@ -28,22 +28,27 @@ export default function ForgotPassword() {
   };
 
   return (
-    <Center minH="100vh" bg="white">
+    <Center 
+      minH="100vh" 
+      style={{
+        background: `url('https://images.pexels.com/photos/19727169/pexels-photo-19727169/free-photo-of-a-view-of-a-snowy-mountain-range-with-a-ski-slope.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') center/cover no-repeat fixed`
+      }}
+    >
       <Box 
         w="full" 
         maxW="md" 
         p={8} 
         borderRadius="xl" 
         boxShadow="2xl" 
-        bg="white"
+        bg="rgba(255, 255, 255, 0.9)"
         border="1px"
-        borderColor="gray.100"
+        borderColor="blue.100"
       >
         <VStack spacing={6}>
           <Heading 
             as="h2" 
             size="xl" 
-            color="black"
+            color="blue.600"
             fontWeight="bold"
             letterSpacing="tight"
           >
@@ -61,7 +66,7 @@ export default function ForgotPassword() {
               status="success" 
               variant="subtle" 
               borderRadius="lg"
-              bg="black"
+              bg="blue.400"
               color="white"
             >
               <AlertIcon color="white" />
@@ -74,7 +79,7 @@ export default function ForgotPassword() {
           <form onSubmit={handleSubmit} style={{ width: "100%" }}>
             <FormControl id="email" isRequired>
               <FormLabel 
-                color="black"
+                color="blue.700"
                 fontSize="sm"
                 fontWeight="medium"
               >
@@ -86,12 +91,12 @@ export default function ForgotPassword() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 size="lg"
-                borderColor="gray.200"
+                borderColor="blue.200"
                 _hover={{
-                  borderColor: "gray.300"
+                  borderColor: "blue.300"
                 }}
                 _focus={{
-                  borderColor: "black",
+                  borderColor: "blue.400",
                   boxShadow: "none"
                 }}
                 bg="white"
@@ -101,14 +106,14 @@ export default function ForgotPassword() {
               type="submit" 
               width="full" 
               mt={6}
-              bg="black"
+              bg="blue.400"
               color="white"
               size="lg"
               _hover={{
-                bg: "gray.800"
+                bg: "blue.500"
               }}
               _active={{
-                bg: "gray.900"
+                bg: "blue.600"
               }}
               letterSpacing="wide"
             >

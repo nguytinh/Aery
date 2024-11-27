@@ -16,6 +16,7 @@ import {
     AlertDescription,
     Avatar,
     Stack,
+    FormErrorMessage,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
@@ -35,8 +36,8 @@ export default function CreateProfile() {
     const [showAlert, setShowAlert] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [usernameError, setUsernameError] = useState("");
 
-    // Clean up the URL when component unmounts
     useEffect(() => {
         if (typeof window !== 'undefined') {
             setFormData({ ...formData, email: localStorage.getItem("email"), password: localStorage.getItem("password") });
@@ -52,14 +53,25 @@ export default function CreateProfile() {
         const file = e.target.files[0];
         if (file) {
             setProfileImage(file);
-            // Create a preview URL for the selected image
             const url = URL.createObjectURL(file);
             setPreviewUrl(url);
         }
     };
 
+    const validateUsername = (username) => {
+        if (username.includes(' ')) {
+            setUsernameError("Username cannot contain spaces");
+            return false;
+        }
+        setUsernameError("");
+        return true;
+    };
+
     const handleChange = (e) => {
         const { id, value } = e.target;
+        if (id === 'userName') {
+            validateUsername(value);
+        }
         setFormData(prev => ({
             ...prev,
             [id]: value
@@ -68,23 +80,23 @@ export default function CreateProfile() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validate username before submission
+        if (!validateUsername(formData.userName)) {
+            return;
+        }
+
         setIsLoading(true);
         setError("");
 
         try {
-            // Create a FormData object to send both file and text data
             const submitData = new FormData();
             if (profileImage) {
                 submitData.append("profileImage", profileImage);
             }
-            // Append other form data
             Object.keys(formData).forEach(key => {
                 submitData.append(key, formData[key]);
             });
-            for (const [key, value] of submitData.entries()) {
-                console.log(`${key}: ${value}`);
-            }
-
 
             const response = await fetch('/api/user/signup', {
                 method: 'POST',
@@ -100,25 +112,18 @@ export default function CreateProfile() {
 
             setShowAlert(true);
             setTimeout(() => setShowAlert(false), 5000);
-            // remove email and password from localStorage
+
             if (typeof window !== 'undefined') {
                 localStorage.removeItem('email');
                 localStorage.removeItem('password');
             }
 
-            // sign user in
             await signIn('credentials', {
-                redirect: true, // Prevents automatic redirect
+                redirect: true,
                 redirectTo: '/',
                 email: formData.email,
                 password: formData.password,
             });
-
-
-            // Optional: Reset form or redirect
-            // setFormData({ firstName: "", lastName: "", aboutMe: "" });
-            // setProfileImage(null);
-            // setPreviewUrl(null);
 
         } catch (err) {
             setError(err.message);
@@ -166,7 +171,6 @@ export default function CreateProfile() {
                                     src={previewUrl}
                                     icon={<AddIcon color="gray.400" boxSize={8} />}
                                 />
-                                {/* Only show hover effect if no image is selected */}
                                 {!previewUrl && (
                                     <Box
                                         position="absolute"
@@ -186,7 +190,6 @@ export default function CreateProfile() {
                                         <AddIcon color="white" boxSize={8} />
                                     </Box>
                                 )}
-                                {/* Show a different hover effect if image is selected */}
                                 {previewUrl && (
                                     <Box
                                         position="absolute"
@@ -285,7 +288,7 @@ export default function CreateProfile() {
                                 />
                             </FormControl>
 
-                            <FormControl id="userName" isRequired>
+                            <FormControl id="userName" isRequired isInvalid={!!usernameError}>
                                 <FormLabel color="black" fontSize="sm" fontWeight="medium">
                                     Username
                                 </FormLabel>
@@ -299,6 +302,7 @@ export default function CreateProfile() {
                                     _focus={{ borderColor: "black", boxShadow: "none" }}
                                     bg="white"
                                 />
+                                <FormErrorMessage>{usernameError}</FormErrorMessage>
                             </FormControl>
 
                             <FormControl id="aboutMe">
@@ -329,6 +333,7 @@ export default function CreateProfile() {
                                 _active={{ bg: "gray.900" }}
                                 letterSpacing="wide"
                                 isLoading={isLoading}
+                                isDisabled={!!usernameError}
                             >
                                 Save Profile
                             </Button>
@@ -338,5 +343,4 @@ export default function CreateProfile() {
             </Box>
         </Center>
     );
-
 }

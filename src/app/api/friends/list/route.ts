@@ -10,11 +10,8 @@ export async function GET() {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // Get the current user with their friends
-        const currentUser = await prisma.user.findFirst({
-            where: {
-                userName: session.username
-            },
+        const user = await prisma.user.findFirst({
+            where: { userName: session.username },
             include: {
                 friends: {
                     select: {
@@ -27,11 +24,11 @@ export async function GET() {
             }
         });
 
-        if (!currentUser) {
+        if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        return NextResponse.json(currentUser.friends);
+        return NextResponse.json(user.friends);
     } catch (error) {
         console.error("Error fetching friends:", error);
         return NextResponse.json(
