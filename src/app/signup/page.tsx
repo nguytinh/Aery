@@ -88,9 +88,26 @@ export default function Signup() {
     };
 
     return (
-        <Flex align="center" justify="center" minH="100vh" bg="gray.50">
-            <Box bg="white" p={8} rounded="md" shadow="lg" width="full" maxW="md">
-                <Heading as="h1" size="lg" textAlign="center" mb={6}>Sign up for an account below:</Heading>
+        <Flex 
+            align="center" 
+            justify="center" 
+            minH="100vh" 
+            position="relative"
+            style={{
+                background: `url('https://images.pexels.com/photos/19727169/pexels-photo-19727169/free-photo-of-a-view-of-a-snowy-mountain-range-with-a-ski-slope.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') center/cover no-repeat fixed`,
+            }}
+        >
+            <Box 
+                bg="white" 
+                p={8} 
+                rounded="lg" 
+                shadow="2xl"
+                width="full" 
+                maxW="md"
+                position="relative"
+                backgroundColor="rgba(255, 255, 255, 0.9)"
+            >
+                <Heading as="h1" size="lg" textAlign="center" mb={6}>Sign Up:</Heading>
                 <form onSubmit={handleSubmit(handleSignUp)}>
                     <FormControl isInvalid={!!errors.email} mb={4}>
                         <FormLabel>Email</FormLabel>

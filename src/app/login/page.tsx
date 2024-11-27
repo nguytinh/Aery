@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { signIn } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { Image } from '@chakra-ui/react';
 import {
     Box,
     Button,
@@ -14,7 +16,7 @@ import {
     Input,
     Text,
     Heading,
-    Link,
+    Link
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
@@ -33,9 +35,14 @@ const signUpSchema = z.object({
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
 export default function Login() {
+    const [isLoaded, setIsLoaded] = useState(false);
     const { register, handleSubmit, setError, formState: { errors } } = useForm<SignUpFormData>({
         resolver: zodResolver(signUpSchema),
     });
+
+    useEffect(() => {
+        setIsLoaded(true);
+    }, []);
 
     const handleSignIn = async (data: SignUpFormData) => {
         const response = await fetch("/api/user/signin", {
@@ -51,7 +58,7 @@ export default function Login() {
             });
         } else {
             await signIn('credentials', {
-                redirect: true, // Prevents automatic redirect
+                redirect: true,
                 redirectTo: '/home',
                 email: data.email,
                 password: data.password,
@@ -60,28 +67,58 @@ export default function Login() {
     };
 
     return (
-        <Flex align="center" justify="center" minH="100vh" bg="gray.50">
-            <Box bg="white" p={8} rounded="md" shadow="lg" width="full" maxW="md">
-                <Heading as="h1" size="lg" textAlign="center" mb={6}>Sign In</Heading>
+        <Flex 
+            align="center" 
+            justify="center" 
+            minH="100vh" 
+            position="relative"
+            style={{
+                background: `url('https://images.pexels.com/photos/19727169/pexels-photo-19727169/free-photo-of-a-view-of-a-snowy-mountain-range-with-a-ski-slope.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') center/cover no-repeat fixed`,
+            }}
+        >
+            <Box 
+                bg="white" 
+                p={8} 
+                rounded="lg" 
+                shadow="2xl"
+                width="full" 
+                maxW="md"
+                position="relative"
+                backgroundColor="rgba(255, 255, 255, 0.95)"
+            >
+                <Flex direction="column" align="center" mb={6}>
+                    {isLoaded && (
+                        <Image 
+                            src="/assets/Aery.jpg"
+                            alt="Logo"
+                            boxSize="200px"
+                            onError={(e) => console.error('Image failed to load:', e)}
+                            onLoad={() => console.log('Image loaded successfully')}
+                        />
+                    )}
+                </Flex>
+                
                 <form onSubmit={handleSubmit(handleSignIn)}>
                     <FormControl isInvalid={!!errors.email} mb={4}>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel color="blue.700">Email</FormLabel>
                         <Input
                             type="email"
                             {...register("email")}
                             placeholder="Enter your email"
-                            focusBorderColor="black"
+                            focusBorderColor="blue.400"
+                            borderColor="blue.200"
                         />
                         <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
                     </FormControl>
 
                     <FormControl isInvalid={!!errors.password} mb={4}>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel color="blue.700">Password</FormLabel>
                         <Input
                             type="password"
                             {...register("password")}
                             placeholder="Enter your password"
-                            focusBorderColor="black"
+                            focusBorderColor="blue.400"
+                            borderColor="blue.200"
                         />
                         <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
                     </FormControl>
@@ -94,16 +131,18 @@ export default function Login() {
 
                     <Button
                         type="submit"
-                        bg="black"
+                        bg="blue.400"
                         width="full"
                         mt={4}
                         color="white"
+                        _hover={{ bg: "blue.500" }}
+                        _active={{ bg: "blue.600" }}
                     >
                         Sign In
                     </Button>
 
-                    <Text textAlign="center" mt={4}>
-                        Don’t have an account?{" "}
+                    <Text textAlign="center" mt={4} color="gray.600">
+                        Don't have an account?{" "}
                         <Link as={NextLink} href="/signup" color="blue.500">
                             Sign Up
                         </Link>

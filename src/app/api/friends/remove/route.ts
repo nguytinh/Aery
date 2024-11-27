@@ -24,6 +24,27 @@ export async function POST(req: Request) {
             );
         }
 
+        // Find and update the friend request to set status to "REMOVED"
+        await prisma.friendRequest.updateMany({
+            where: {
+                OR: [
+                    {
+                        senderId: currentUser.id,
+                        receiverId: friendId,
+                        status: "ACCEPTED"
+                    },
+                    {
+                        senderId: friendId,
+                        receiverId: currentUser.id,
+                        status: "ACCEPTED"
+                    }
+                ]
+            },
+            data: {
+                status: "REMOVED"
+            }
+        });
+
         // Remove the friend connection both ways
         await prisma.user.update({
             where: { id: currentUser.id },
