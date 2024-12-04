@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const session = await auth();
 
   if (!reqEmail) {
-    console.log("REQQQQ", reqEmail)
+    
     return NextResponse.json(
       { success: false, message: 'Not authenticated' },
       { status: 401 }
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   }
 
   if(session.user.email !== reqEmail){
-    console.log("REQQQQ", reqEmail)
+    
     return NextResponse.json(
       { success: false, message: 'Not authenticated' },
       { status: 401 }
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    console.log("REQQQQ", reqEmail)
+  
     const user = await prisma.user.findUnique({
       where: {
         email: reqEmail,
@@ -46,11 +46,11 @@ export async function GET(request: Request) {
         Categories: true
     }
     });
-    console.log("REQQQQ", reqEmail)
+
     return NextResponse.json(user, { status: 200 });
   }
   catch (error) {
-    console.log("REQQQQ", reqEmail)
+   
     if (error instanceof Prisma.PrismaClientValidationError) {
       console.error('Validation error:', error.message);
       return NextResponse.json(
