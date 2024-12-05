@@ -2,16 +2,26 @@ import { prisma } from "@/app/db";
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req, res, params) {
+    // parse params
+    let { category } = params;
+
+    try {
+        category = parseInt(category);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+        return NextResponse.json({ error: "Invalid category" }, { status: 400 });
+    }
+
     // Get current user session.
     const session = await auth();
-    console.log('session', session)
     if (!session?.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     // const { skip } = await res.json(); // Skip count for pagination.
 
     // Get all of user friends and their streaks.
+    // Get all streaks that matches the category
     const user = await prisma.user.findFirst({
         where: { userName: session.username },
         include: {
@@ -21,7 +31,7 @@ export async function GET() {
                     userName: true,
                     name: true,
                     email: true,
-                    Streaks: true
+                    Streaks: {where: {categoryId: parseInt(category)}}
                     //Streaks: {take: 1, orderBy: {currentStreak: 'desc'}}
                 },
             },

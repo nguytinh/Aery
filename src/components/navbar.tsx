@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
     }
 
     return (
-        <Box as="nav" bg="white" py={4} shadow="md" position="static" width="100%" zIndex="100">
+        <Box as="nav" bg="white" py={4} shadow="md" position="static" width="100%" zIndex="100" marginBottom="1rem">
             <Flex maxW="1200px" mx="auto" align="center" px={4} justify="center">
                 <HStack spacing={8}>
                     <Link
@@ -76,6 +76,20 @@ const Navbar: React.FC = () => {
                         }}
                     >
                         Friends
+                    </Link>
+
+                    <Link
+                        href='/leaderboard'
+                        // onClick={() => handleNavigation('/searchfriend')}
+                        color="gray.700"
+                        fontWeight="semibold"
+                        cursor="pointer"
+                        _hover={{
+                            color: "blue.300",
+                            textDecoration: "none"
+                        }}
+                    >
+                        Leaderboard
                     </Link>
 
                     <Link
