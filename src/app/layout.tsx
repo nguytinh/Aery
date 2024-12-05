@@ -1,6 +1,5 @@
 import './globals.css'
 import { Provider } from "../components/ui/provider"
-import UserAvatar from '@/components/auth/avatar'
 import { SessionProvider } from "next-auth/react"
 import Navbar from '@/components/navbar'
 import { ToastContainer } from 'react-toastify'

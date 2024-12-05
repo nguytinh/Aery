@@ -1,7 +1,6 @@
 "use client";
 
 import { ClientUser } from "@/app/interfaces/primsa";
-import Navbar from "../../../components/navbar";
 import {
     Box,
     Heading,
@@ -36,7 +35,6 @@ interface ExtendedClientUser extends ClientUser {
 export default function UserProfile({ user }: { user: ExtendedClientUser | null }) {
     return (
         <>
-            <Navbar />
             <Container maxW="6xl" py={16} px={4}>
                 {!user && (
                     <Center h="50vh">
@@ -59,7 +57,7 @@ export default function UserProfile({ user }: { user: ExtendedClientUser | null 
                                         alt="Profile"
                                         shadow="lg"
                                     />
-                                    
+
                                     <VStack spacing={2}>
                                         <Heading size="xl" color="gray.800">
                                             {user.userName}
@@ -200,7 +198,7 @@ export default function UserProfile({ user }: { user: ExtendedClientUser | null 
                                                         <Text
                                                             fontSize="md"
                                                             fontWeight="bold"
-                                                            
+
                                                         >
                                                             {streak.currentStreak} days
                                                         </Text>
