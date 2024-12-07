@@ -37,7 +37,10 @@ const CategoryBar: React.FC<CategoryBarProps> = ({
 }) => {
   const placeHolderEmojis: Record<string, string> = {
     fitness: "🏋️",
-    school: "📖",
+    school: "🏫",
+    water: "💧",
+    studying: "📚",
+    shower: "🚿",
   };
 
   const filterPosts = (filter: string) => {
