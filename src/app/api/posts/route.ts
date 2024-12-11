@@ -17,6 +17,9 @@ export async function POST(request: Request) {
     const userEmail = session.user.email;
     const user = await prisma.user.findUnique({
       where: { email: userEmail },
+      include: {
+        Categories: true // Include categories to check if user already has this category
+      }
     });
 
     if (!user) {
@@ -29,37 +32,52 @@ export async function POST(request: Request) {
     const data = await request.json();
     const { postName, description, imageUrl, categoryId } = data;
 
-    // Create the post with category
-    const newPost = await prisma.post.create({
-      data: {
-        title: postName,
-        content: description,
-        published: true,
-        image: imageUrl,
-        author: { connect: { id: user.id } },
-        Category: categoryId ? { connect: { id: categoryId } } : undefined,
-      },
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            userName: true,
-          },
-        },
-        Category: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+    // Check if user already has this category
+    const hasCategory = user.Categories.some(cat => cat.id === categoryId);
 
-    // Update or create streak if category is provided
-    if (categoryId) {
-      try {
-        // Check for existing streak
+    // Start a transaction to handle all database operations
+    const [newPost] = await prisma.$transaction(async (prisma) => {
+      // If user doesn't have the category, add it
+      if (!hasCategory && categoryId) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            Categories: {
+              connect: { id: categoryId }
+            }
+          }
+        });
+      }
+
+      // Create the post with category
+      const post = await prisma.post.create({
+        data: {
+          title: postName,
+          content: description,
+          published: true,
+          image: imageUrl,
+          author: { connect: { id: user.id } },
+          Category: categoryId ? { connect: { id: categoryId } } : undefined,
+        },
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              userName: true,
+            },
+          },
+          Category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      // Handle streak
+      if (categoryId) {
         const existingStreak = await prisma.streak.findUnique({
           where: {
             userId_categoryId: {
@@ -70,7 +88,6 @@ export async function POST(request: Request) {
         });
 
         if (existingStreak) {
-          // Update existing streak
           await prisma.streak.update({
             where: {
               userId_categoryId: {
@@ -83,7 +100,6 @@ export async function POST(request: Request) {
             },
           });
         } else {
-          // Create new streak
           await prisma.streak.create({
             data: {
               userId: user.id,
@@ -92,11 +108,10 @@ export async function POST(request: Request) {
             },
           });
         }
-      } catch (streakError) {
-        console.error('Error updating streak:', streakError);
-        // Don't fail the post creation if streak update fails
       }
-    }
+
+      return [post];
+    });
 
     return NextResponse.json(newPost, { status: 201 }); // 201 = Created
   } catch (error) {
