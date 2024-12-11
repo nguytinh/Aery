@@ -1,85 +1,88 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  email      String     @unique
-  password   String
-  name       String?
-  userName   String?    @unique
-  bio        String?
-  createdAt  DateTime   @default(now())
-  posts      Post[]
-  friends    User[]     @relation("Friends")
-  friendOf   User[]     @relation("Friends")
-  // Add these two new lines for friend requests
-  sentRequests     FriendRequest[] @relation("SentRequests")
-  receivedRequests FriendRequest[] @relation("ReceivedRequests")
-  Session    Session[]
-  Categories Category[]
-  Streaks    Streak[]
+    id               Int             @id @default(autoincrement())
+    email            String          @unique
+    password         String
+    name             String?
+    userName         String?         @unique
+    bio              String?
+    createdAt        DateTime        @default(now())
+    posts            Post[]
+    friends          User[]          @relation("Friends")
+    friendOf         User[]          @relation("Friends")
+    // Add these two new lines for friend requests
+    sentRequests     FriendRequest[] @relation("SentRequests")
+    receivedRequests FriendRequest[] @relation("ReceivedRequests")
+    Session          Session[]
+    Categories       Category[]
+    Streaks          Streak[]
 }
 
 model Session {
-  sessionToken String   @unique
-  userId       Int
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    sessionToken String   @unique
+    userId       Int
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
 }
 
 model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
-  @@id([identifier, token])
+    identifier String
+    token      String
+    expires    DateTime
+
+    @@id([identifier, token])
 }
 
 model Post {
-  id         Int       @id @default(autoincrement())
-  title      String
-  content    String?
-  published  Boolean   @default(false)
-  author     User      @relation(fields: [authorId], references: [id])
-  authorId   Int
-  image      String?
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId Int?
+    id         Int       @id @default(autoincrement())
+    title      String
+    content    String?
+    published  Boolean   @default(false)
+    author     User      @relation(fields: [authorId], references: [id])
+    authorId   Int
+    image      String?
+    Category   Category? @relation(fields: [categoryId], references: [id])
+    categoryId Int?
 }
 
 model Category {
-  id      Int      @id @default(autoincrement())
-  name    String
-  posts   Post[]
-  users   User[]
-  streaks Streak[]
+    id      Int      @id @default(autoincrement())
+    name    String
+    posts   Post[]
+    users   User[]
+    streaks Streak[]
 }
 
 model Streak {
-  id       Int      @id @default(autoincrement())
-  userId   Int     
-  user    User     @relation(fields: [userId], references: [id])
-  category Category @relation(fields: [categoryId], references: [id])
-  categoryId Int 
-  currentStreak Int @default(0)
-  @@unique([userId, categoryId])
+    id            Int       @id @default(autoincrement())
+    userId        Int
+    user          User      @relation(fields: [userId], references: [id])
+    category      Category  @relation(fields: [categoryId], references: [id])
+    categoryId    Int
+    lastPostDate  DateTime?
+    currentStreak Int       @default(0)
+
+    @@unique([userId, categoryId])
 }
 
 model FriendRequest {
-  id          Int      @id @default(autoincrement())
-  senderId    Int
-  receiverId  Int
-  status      String   @default("PENDING")
-  createdAt   DateTime @default(now())
-  sender      User     @relation("SentRequests", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver    User     @relation("ReceivedRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+    id         Int      @id @default(autoincrement())
+    senderId   Int
+    receiverId Int
+    status     String   @default("PENDING")
+    createdAt  DateTime @default(now())
+    sender     User     @relation("SentRequests", fields: [senderId], references: [id], onDelete: Cascade)
+    receiver   User     @relation("ReceivedRequests", fields: [receiverId], references: [id], onDelete: Cascade)
 
-  @@unique([senderId, receiverId])
+    @@unique([senderId, receiverId])
 }

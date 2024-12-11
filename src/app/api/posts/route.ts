@@ -96,6 +96,7 @@ export async function POST(request: Request) {
               },
             },
             data: {
+                lastPostDate: new Date(),
               currentStreak: existingStreak.currentStreak + 1,
             },
           });
@@ -105,6 +106,7 @@ export async function POST(request: Request) {
               userId: user.id,
               categoryId: categoryId,
               currentStreak: 1,
+              lastPostDate: new Date(),
             },
           });
         }
