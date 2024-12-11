@@ -115,7 +115,7 @@ async function main() {
     ]);
 
     // Create categories
-    const categories = await Promise.all([
+    await Promise.all([
       prisma.category.create({
         data: { id: 1, name: "fitness" }
       }),
@@ -376,6 +376,6 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error("Error", e);
     process.exit(1);
   });

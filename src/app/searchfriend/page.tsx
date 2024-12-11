@@ -54,7 +54,7 @@ interface FriendRequest {
 }
 
 const FriendsPage = () => {
-    const { data: session, status } = useSession();
+    const { status } = useSession();
     const [friends, setFriends] = useState<Friend[]>([]);
     const [pendingRequests, setPendingRequests] = useState<FriendRequest[]>([]);
     const [newFriend, setNewFriend] = useState("");

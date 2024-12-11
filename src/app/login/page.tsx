@@ -15,7 +15,6 @@ import {
     FormErrorMessage,
     Input,
     Text,
-    Heading,
     Link
 } from "@chakra-ui/react";
 import NextLink from "next/link";
@@ -67,28 +66,28 @@ export default function Login() {
     };
 
     return (
-        <Flex 
-            align="center" 
-            justify="center" 
-            minH="100vh" 
+        <Flex
+            align="center"
+            justify="center"
+            minH="100vh"
             position="relative"
             style={{
                 background: `url('https://images.pexels.com/photos/19727169/pexels-photo-19727169/free-photo-of-a-view-of-a-snowy-mountain-range-with-a-ski-slope.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') center/cover no-repeat fixed`,
             }}
         >
-            <Box 
-                bg="white" 
-                p={8} 
-                rounded="lg" 
+            <Box
+                bg="white"
+                p={8}
+                rounded="lg"
                 shadow="2xl"
-                width="full" 
+                width="full"
                 maxW="md"
                 position="relative"
                 backgroundColor="rgba(255, 255, 255, 0.95)"
             >
                 <Flex direction="column" align="center" mb={6}>
                     {isLoaded && (
-                        <Image 
+                        <Image
                             src="/assets/Aery.jpg"
                             alt="Logo"
                             boxSize="200px"
@@ -97,7 +96,7 @@ export default function Login() {
                         />
                     )}
                 </Flex>
-                
+
                 <form onSubmit={handleSubmit(handleSignIn)}>
                     <FormControl isInvalid={!!errors.email} mb={4}>
                         <FormLabel color="blue.700">Email</FormLabel>
@@ -142,7 +141,7 @@ export default function Login() {
                     </Button>
 
                     <Text textAlign="center" mt={4} color="gray.600">
-                        Don't have an account?{" "}
+                        Don&apos;t have an account?{" "}
                         <Link as={NextLink} href="/signup" color="blue.500">
                             Sign Up
                         </Link>

@@ -30,6 +30,7 @@ export async function POST(request: Request) {
             );
         }
 
+
         const existingLike = await prisma.like.findUnique({
             where: {
                 userId_postId: {
