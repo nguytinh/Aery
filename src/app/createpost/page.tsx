@@ -7,7 +7,6 @@ import { Box, Flex, Heading, FormControl, FormLabel, Input, Button, FormErrorMes
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 
-// Add categoryId to the schema
 const postSchema = z.object({
   postName: z.string().min(3),
   description: z.string(),
@@ -30,7 +29,6 @@ const CreatePost: React.FC = () => {
     resolver: zodResolver(postSchema)
   });
 
-  // Fetch categories when component mounts
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -48,16 +46,9 @@ const CreatePost: React.FC = () => {
     fetchCategories();
   }, []);
 
-
   const handleCreatePost = async (data: postFormData) => {
     setIsLoading(true);
     try {
-      // Log the data being sent
-      console.log('Sending data:', {
-        ...data,
-        categoryId: parseInt(data.categoryId)
-      });
-  
       const response = await fetch("/api/posts/", {
         method: "POST",
         headers: {
@@ -68,22 +59,18 @@ const CreatePost: React.FC = () => {
           categoryId: parseInt(data.categoryId)
         }),
       });
-  
-      // Log the response
-      console.log('Response status:', response.status);
+
       const responseText = await response.text();
-      console.log('Response text:', responseText);
-  
-      // Only try to parse as JSON if there's content
+      
       if (responseText) {
         const responseData = JSON.parse(responseText);
         if (!response.ok) {
           throw new Error(responseData?.error || "Failed to create post");
         }
+        // Post was created successfully
+        reset();
+        toast.success('Created Post! Your streak has been updated.');
       }
-  
-      reset();
-      toast.success('Created Post!');
     } catch (error) {
       console.error("Error:", error);
       toast.error(error instanceof Error ? error.message : "Failed to create post");
@@ -91,7 +78,6 @@ const CreatePost: React.FC = () => {
       setIsLoading(false);
     }
   };
-
 
   if (status === "loading") {
     return (
