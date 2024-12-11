@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -15,7 +16,7 @@ async function main() {
       prisma.user.create({
         data: {
           email: 'tinhphong@gmail.com',
-          password: "Randompass12*",
+          password: await bcrypt.hash("Randompass12*", 10),
           name: 'Tinh Nguyen',
           userName: 'tphong',
           bio: 'I love coding!'
@@ -25,7 +26,7 @@ async function main() {
       prisma.user.create({
         data: {
           email: 'etrantalis@gmail.com',
-          password: "Randompass563*",
+          password: await bcrypt.hash("Randompass563*", 10),
           name: 'Ethan Trantalis',
           userName: 'etrantal',
           bio: 'I like to run!'
@@ -35,7 +36,7 @@ async function main() {
       prisma.user.create({
         data: {
           email: 'javalos@gmail.com',
-          password: "Randompass342*",
+          password: await bcrypt.hash("Randompass342*", 10),
           name: 'Jesus Avalos',
           userName: 'javalos',
           bio: 'Hack4Impact woo!'
@@ -45,7 +46,7 @@ async function main() {
       prisma.user.create({
         data: {
           email: 'rgertz@gmail.com',
-          password: "Randompass456*",
+          password: await bcrypt.hash("Randompass456*", 10),
           name: 'Ryan Gertz',
           userName: 'rgertz',
           bio: 'Dual booting Windows and linux!'
@@ -55,7 +56,7 @@ async function main() {
       prisma.user.create({
         data: {
           email: 'jarredondo@gmail.com',
-          password: "Randompass382*",
+          password: await bcrypt.hash("Randompass382*", 10),
           name: 'Joaquin Arredondo',
           userName: 'jarredondo',
           bio: 'I like art!'
@@ -65,7 +66,7 @@ async function main() {
       prisma.user.create({
         data: {
           email: 'random1@gmail.com',
-          password: "Randompass334*",
+          password: await bcrypt.hash("Randompass334*", 10),
           name: 'Random User1',
           userName: 'ruser1',
           bio: 'I like to bake!'
@@ -75,7 +76,7 @@ async function main() {
       prisma.user.create({
         data: {
           email: 'random2@gmail.com',
-          password: "Randompass286*",
+          password: await bcrypt.hash("Randompass286*", 10),
           name: 'Random User2',
           userName: 'ruser2',
           bio: 'I like to swim!'
@@ -85,7 +86,7 @@ async function main() {
       prisma.user.create({
         data: {
           email: 'random3@gmail.com',
-          password: "Randompass917*",
+          password: await bcrypt.hash("Randompass917*", 10),
           name: 'Random User3',
           userName: 'ruser3',
           bio: 'I like to bike!'
@@ -95,7 +96,7 @@ async function main() {
       prisma.user.create({
         data: {
           email: 'random4@gmail.com',
-          password: "Randompass816*",
+          password: await bcrypt.hash("Randompass816*", 10),
           name: 'Random User4',
           userName: 'ruser4',
           bio: 'I like to write!'
@@ -105,7 +106,7 @@ async function main() {
       prisma.user.create({
         data: {
           email: 'random5@gmail.com',
-          password: "Randompass209*",
+          password: await bcrypt.hash("Randompass209*", 10),
           name: 'Random User5',
           userName: 'ruser5',
           bio: 'I like to think!'
