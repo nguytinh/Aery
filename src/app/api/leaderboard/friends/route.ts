@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
 // Returns the difference in days between two dates.
-function dateDiffInDays(a: Date, b: Date) {
+export function dateDiffInDays(a: Date, b: Date) {
     const _MS_PER_DAY = 1000 * 60 * 60 * 24;
     const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
     const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
@@ -11,7 +11,7 @@ function dateDiffInDays(a: Date, b: Date) {
 }
 
 // Returns if difference in days exceeds the threshold.
-function isStreakBroken(lastPostDate: Date | null, threshold: number = 2) {
+export function isStreakBroken(lastPostDate: Date | null, threshold: number = 2) {
     if (!lastPostDate) return true;
     return dateDiffInDays(lastPostDate, new Date()) > threshold;
 }

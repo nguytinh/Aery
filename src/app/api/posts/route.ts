@@ -3,6 +3,7 @@ import { prisma } from '../../../lib/prisma';
 import { NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { auth } from '@/auth'
+import { dateDiffInDays, isStreakBroken } from '../leaderboard/friends/route';
 
 export async function POST(request: Request) {
   try {
@@ -87,7 +88,7 @@ export async function POST(request: Request) {
           },
         });
 
-        if (existingStreak) {
+        if (existingStreak && (dateDiffInDays(existingStreak.lastPostDate, new Date()) === 1)) {
           await prisma.streak.update({
             where: {
               userId_categoryId: {
